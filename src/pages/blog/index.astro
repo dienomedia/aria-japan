@@ -1,0 +1,114 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import Icon from '../../components/Icon.astro';
+import { BLOG_CATEGORIES } from '../../lib/categories';
+import { excerpt, formatDate, getPublishedPosts } from '../../lib/blog';
+
+const posts = await getPublishedPosts();
+
+const chips = [{ value: 'All', label: 'すべて' }, ...BLOG_CATEGORIES.map((c) => ({ value: c, label: c }))];
+const chipStyle = (active: boolean) =>
+  'font:inherit; font-size:13.5px; font-weight:600; cursor:pointer; padding:8px 16px; border-radius:999px; border:1px solid ' +
+  (active ? 'var(--accent)' : '#d9e6ed') +
+  '; color:' + (active ? '#fff' : '#3f6075') +
+  '; background:' + (active ? 'var(--accent)' : '#fff') + ';';
+---
+
+<Base
+  title="ブログ | Ariacorporation"
+  description="韓国渡航を計画する患者様のために、Aria Corporationのチームが執筆・公開している記事です。"
+>
+  <div style="font-family:'Noto Sans JP',system-ui,sans-serif; color:#122a3a; background:#eef6fa; min-height:100vh; -webkit-font-smoothing:antialiased; display:flex; flex-direction:column;">
+    <Nav active="blog" showCta={false} closeDelay={800} />
+
+    <header style="background:linear-gradient(180deg,#eef6fa 0%,#ffffff 100%); border-bottom:1px solid #e1edf3;">
+      <div style="max-width:1180px; margin:0 auto; padding:clamp(44px,6vw,84px) clamp(20px,5vw,72px); display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:24px;">
+        <div style="max-width:640px;">
+          <div style="font:700 13px/1 'Noto Sans JP'; letter-spacing:.14em; text-transform:uppercase; color:#2e9fc0; margin-bottom:16px;">アリアコーポレーション ブログ</div>
+          <h1 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:800; font-size:clamp(34px,5vw,58px); line-height:1.05; letter-spacing:-.02em; margin:0 0 18px;">ガイド＆回復ストーリー</h1>
+          <p style="font-size:clamp(16px,1.6vw,19px); line-height:1.65; color:#5a7488; margin:0;">韓国渡航を計画する患者様のために、Aria Corporationのチームが執筆・公開している記事です。</p>
+        </div>
+      </div>
+    </header>
+
+    <main style="flex:1;">
+      <div style="max-width:1180px; margin:0 auto; padding:clamp(36px,5vw,64px) clamp(20px,5vw,72px);">
+
+        <!-- Filter chips -->
+        <div style="display:flex; flex-wrap:wrap; gap:9px; margin-bottom:36px;">
+          {chips.map((f, i) => (
+            <button type="button" data-filter={f.value} style={chipStyle(i === 0)}>{f.label}</button>
+          ))}
+        </div>
+
+        <!-- Posts -->
+        <div id="blog-grid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:22px;" hidden={posts.length === 0}>
+          {posts.map((p) => (
+            <a
+              href={`/blog/${p.id}/`}
+              data-cat={p.data.category}
+              class="lift"
+              style="display:flex; flex-direction:column; background:#fff; border:1px solid #e1edf3; border-radius:22px; overflow:hidden; box-shadow:0 1px 2px rgba(16,41,61,.04);"
+            >
+              {p.data.cover ? (
+                <img src={p.data.cover} alt="" style="width:100%; height:200px; object-fit:cover; display:block;" />
+              ) : (
+                <div class="ph" style="height:200px;"><span class="ph-l">{p.data.category}</span></div>
+              )}
+              <div style="padding:24px 26px 26px; display:flex; flex-direction:column; flex:1;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:13px;">
+                  <span style="font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#2e9fc0;">{p.data.category}</span>
+                  <span style="font-size:12.5px; color:#9aabb6;">{formatDate(p.data.date)}</span>
+                </div>
+                <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:600; font-size:20px; line-height:1.3; margin:0 0 12px; color:#122a3a;">{p.data.title}</h3>
+                <p style="font-size:14.5px; line-height:1.6; color:#5a7488; margin:0 0 18px;">{excerpt(p.body)}</p>
+                <div style="margin-top:auto; display:inline-flex; align-items:center; gap:7px; color:#122a3a; font-weight:700; font-size:14.5px;">記事を読む <Icon name="arrow-right" style="font-size:16px;" /></div>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <!-- Empty state -->
+        <div id="blog-empty" hidden={posts.length > 0} style="text-align:center; background:#fff; border:1px dashed #cfe0e9; border-radius:24px; padding:clamp(48px,7vw,88px) 28px;">
+          <div style="width:62px; height:62px; border-radius:18px; background:#f0f6f9; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+            <Icon name="feather" style="font-size:26px; color:var(--accent);" />
+          </div>
+          <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:22px; margin:0 0 10px;">まだ投稿がありません</h3>
+          <p style="font-size:15px; color:#5a7488; margin:0;">最初の記事を公開すると、ここに表示されます。</p>
+        </div>
+
+      </div>
+    </main>
+
+    <Footer variant="blog" />
+  </div>
+</Base>
+
+<script>
+  // Category filter chips (client-side; every post is already in the page).
+  const chips = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const cards = document.querySelectorAll<HTMLElement>('#blog-grid [data-cat]');
+  const grid = document.getElementById('blog-grid');
+  const empty = document.getElementById('blog-empty');
+
+  function apply(filter: string) {
+    chips.forEach((chip) => {
+      const on = chip.dataset.filter === filter;
+      chip.style.background = on ? 'var(--accent)' : '#fff';
+      chip.style.color = on ? '#fff' : '#3f6075';
+      chip.style.borderColor = on ? 'var(--accent)' : '#d9e6ed';
+    });
+    let visible = 0;
+    cards.forEach((card) => {
+      const show = filter === 'All' || card.dataset.cat === filter;
+      card.style.display = show ? 'flex' : 'none';
+      if (show) visible++;
+    });
+    if (grid) grid.hidden = visible === 0;
+    if (empty) empty.hidden = visible > 0;
+  }
+
+  chips.forEach((chip) => chip.addEventListener('click', () => apply(chip.dataset.filter || 'All')));
+</script>

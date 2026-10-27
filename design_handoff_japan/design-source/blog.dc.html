@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<style>
+  :root{ --accent:#FF7A4D; --accent-press:#ee6537; }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{ background:#eef6fa; }
+  ::selection{ background:#ffd9c9; }
+  a{ text-decoration:none; color:inherit; }
+  .ph{ position:relative; overflow:hidden; background:repeating-linear-gradient(135deg,#dbe8ef 0 11px,#e9f2f7 11px 22px); }
+  .ph > .ph-l{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:10px; font:600 11px/1.5 ui-monospace,Menlo,monospace; letter-spacing:.1em; color:#7d99a8; text-transform:uppercase; }
+  .lift{ transition:transform .25s ease, box-shadow .25s ease; }
+  .lift:hover{ transform:translateY(-4px); box-shadow:0 18px 40px -18px rgba(16,41,61,.35); }
+  .navlink{ position:relative; }
+  .navlink:after{ content:""; position:absolute; left:0; bottom:-6px; height:2px; width:0; background:var(--accent); transition:width .25s ease; }
+  .navlink:hover:after{ width:100%; }
+  [data-lucide]{ width:1em; height:1em; }
+  /* ---- Surgeries nav mega-menu ---- */
+  .nav-surg{ position:relative; }
+  .surg-mega{ position:absolute; top:100%; left:50%; transform:translateX(-50%); padding-top:16px; opacity:0; visibility:hidden; transition:opacity .2s ease; z-index:60; pointer-events:none; }
+  .nav-surg.open .surg-mega{ opacity:1; visibility:visible; pointer-events:auto; }
+  .surg-mega-inner{ position:relative; min-width:300px; background:#fff; border:1px solid #e1edf3; border-radius:18px; box-shadow:0 34px 70px -24px rgba(16,41,61,.45); padding:10px; }
+  .surg-cat{ position:relative; }
+  .surg-cat-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:11px 15px; border-radius:11px; color:#122a3a; font-weight:600; font-size:14.5px; cursor:pointer; transition:background .15s ease, color .15s ease; }
+  .surg-cat:hover .surg-cat-row{ background:#f0f6f9; color:var(--accent); }
+  .surg-cat-row .chev{ opacity:.4; transition:transform .15s ease, opacity .15s ease; }
+  .surg-cat:hover .surg-cat-row .chev{ opacity:1; transform:translateX(3px); color:var(--accent); }
+  .surg-sub{ position:absolute; left:100%; top:0; padding-left:14px; opacity:0; visibility:hidden; transform:translateX(6px); transition:opacity .18s ease, transform .18s ease; pointer-events:none; }
+  .surg-cat:hover .surg-sub{ opacity:1; visibility:visible; transform:translateX(0); pointer-events:auto; }
+  .surg-sub-inner{ min-width:288px; max-width:330px; background:#fff; border:1px solid #e1edf3; border-radius:18px; box-shadow:0 34px 70px -24px rgba(16,41,61,.45); padding:18px 18px 14px; }
+  .surg-proc{ display:block; padding:8px 11px; border-radius:9px; font-size:13.5px; font-weight:500; color:#3f6075; transition:background .14s ease, color .14s ease; }
+  .surg-proc:hover{ background:#f0f6f9; color:var(--accent); }
+  /* ---- Language switcher ---- */
+  .nav-lang{ position:relative; }
+  .lang-btn{ display:inline-flex; align-items:center; gap:7px; background:#f0f6f9; border:1px solid #dceaf1; padding:7px 11px 7px 9px; border-radius:999px; cursor:pointer; color:#122a3a; font:inherit; line-height:0; }
+  .lang-btn:hover{ background:#e6f1f6; }
+  .lang-btn .lang-chev{ transition:transform .2s ease; }
+  .nav-lang.open .lang-btn .lang-chev{ transform:rotate(180deg); }
+  .lang-menu{ position:absolute; top:100%; right:0; margin-top:14px; min-width:188px; background:#fff; border:1px solid #e1edf3; border-radius:14px; box-shadow:0 34px 70px -24px rgba(16,41,61,.45); padding:7px; opacity:0; visibility:hidden; transform:translateY(-8px); transition:opacity .18s ease, transform .18s ease; z-index:70; }
+  .nav-lang.open .lang-menu{ opacity:1; visibility:visible; transform:translateY(0); }
+  .lang-item{ display:flex; align-items:center; gap:11px; padding:9px 12px; border-radius:10px; font-size:14px; font-weight:600; color:#122a3a; cursor:pointer; transition:background .14s ease; }
+  .lang-item:hover{ background:#f0f6f9; }
+  .lang-flag{ width:24px; height:16px; border-radius:3px; flex:none; box-shadow:0 0 0 1px rgba(16,41,61,.12); display:block; }
+  /* ---- Blog form ---- */
+  .fld{ width:100%; font:inherit; font-size:15px; color:#122a3a; background:#f7fbfd; border:1.5px solid #dceaf1; border-radius:12px; padding:13px 15px; outline:none; transition:border-color .15s ease, background .15s ease; }
+  .fld:focus{ border-color:var(--accent); background:#fff; }
+  .fld::placeholder{ color:#9aabb6; }
+  textarea.fld{ resize:vertical; min-height:220px; line-height:1.65; }
+  @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes popIn{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:translateY(0); } }
+</style>
+</helmet>
+
+<div style="font-family:'Noto Sans JP',system-ui,sans-serif; color:#122a3a; background:#eef6fa; min-height:100vh; -webkit-font-smoothing:antialiased; display:flex; flex-direction:column;">
+  <div aria-label="SNS" style="position:fixed; right:clamp(14px,2vw,26px); bottom:clamp(18px,3vw,30px); z-index:80; display:flex; flex-direction:column; gap:10px;">
+    <a href="https://x.com/_Ariajapan" target="_blank" rel="noopener" aria-label="X" style="width:50px; height:50px; border-radius:50%; background:#000000; color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 24px -10px rgba(16,41,61,.55); transition:transform .2s ease;" style-hover="transform:translateY(-3px);"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px; height:20px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    <a href="https://www.instagram.com/ariacorp_japan" target="_blank" rel="noopener" aria-label="Instagram" style="width:50px; height:50px; border-radius:50%; background:linear-gradient(45deg,#f9a33b 0%,#e1306c 50%,#833ab4 100%); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 24px -10px rgba(16,41,61,.55); transition:transform .2s ease;" style-hover="transform:translateY(-3px);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px; height:22px;"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+    <a href="https://lin.ee/3KJTZXJ" target="_blank" rel="noopener" aria-label="LINE" style="width:50px; height:50px; border-radius:50%; background:#06C755; color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 24px -10px rgba(16,41,61,.55); transition:transform .2s ease;" style-hover="transform:translateY(-3px);"><svg viewBox="0 0 24 24" fill="currentColor" style="width:26px; height:26px;"><path d="M12 2.5C6.48 2.5 2 6.12 2 10.58c0 4 3.55 7.35 8.35 7.98.32.07.77.21.88.49.1.25.07.65.03.9l-.14.85c-.04.25-.2.98.86.53 1.06-.45 5.73-3.37 7.82-5.78C21.24 14 22 12.38 22 10.58 22 6.12 17.52 2.5 12 2.5zM8.1 12.96H6.11a.53.53 0 0 1-.53-.53V8.46a.53.53 0 1 1 1.06 0v3.44H8.1a.53.53 0 1 1 0 1.06zm2.05-.53a.53.53 0 1 1-1.06 0V8.46a.53.53 0 1 1 1.06 0zm4.79 0a.53.53 0 0 1-.95.32l-2.04-2.78v2.46a.53.53 0 1 1-1.06 0V8.46a.53.53 0 0 1 .95-.32l2.04 2.78V8.46a.53.53 0 1 1 1.06 0zm3.21-2.51a.53.53 0 1 1 0 1.06h-1.46v.92h1.46a.53.53 0 1 1 0 1.06h-1.99a.53.53 0 0 1-.53-.53V8.46c0-.29.24-.53.53-.53h1.99a.53.53 0 1 1 0 1.06h-1.46v.93z"/></svg></a>
+  </div>
+
+
+  <!-- Nav (Blog active) -->
+  <nav style="background:#fff; border-bottom:1px solid #e1edf3; position:sticky; top:0; z-index:40;">
+    <div style="max-width:1320px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:18px clamp(20px,5vw,72px);">
+      <a href="Aria%20Korea%20Homepage.dc.html" style="display:flex; align-items:center;">
+        <img src="assets/aria-logo-navy-trim.png" alt="Ariacorporation" style="height:28px; width:auto; display:block;">
+      </a>
+      <div style="display:flex; align-items:center; gap:32px;">
+        <a href="about.dc.html" class="navlink" style="font-weight:600; font-size:15px; color:#122a3a;">会社概要</a>
+        <div class="nav-surg {{ surgClass }}" onMouseEnter="{{ onSurgEnter }}" onMouseLeave="{{ onSurgLeave }}">
+          <a href="Aria%20Korea%20Homepage.dc.html#surgeries" class="navlink" style="display:inline-flex; align-items:center; gap:5px; font-weight:600; font-size:15px; color:#122a3a;">施術一覧 <i data-lucide="chevron-down" style="font-size:16px;"></i></a>
+          <div class="surg-mega">
+            <div class="surg-mega-inner">
+              <sc-for list="{{ cats }}" as="c" hint-placeholder-count="10">
+                <div class="surg-cat">
+                  <a href="surgery-category.dc.html?cat={{ c.slug }}" class="surg-cat-row">
+                    <span>{{ c.name }}</span>
+                    <i data-lucide="chevron-right" class="chev" style="font-size:16px;"></i>
+                  </a>
+                  <div class="surg-sub">
+                    <div class="surg-sub-inner">
+                      <a href="surgery-category.dc.html?cat={{ c.slug }}" style="display:flex; align-items:center; justify-content:space-between; gap:14px; padding:0 11px 12px; margin-bottom:6px; border-bottom:1px solid #eef4f7;">
+                        <span style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:15px; color:#122a3a;">{{ c.name }}</span>
+                        <span style="display:inline-flex; align-items:center; gap:5px; font-size:12.5px; font-weight:700; color:var(--accent); white-space:nowrap;">概要を見る <i data-lucide="arrow-up-right" style="font-size:14px;"></i></span>
+                      </a>
+                      <sc-for list="{{ c.procedures }}" as="p" hint-placeholder-count="6">
+                        <a href="procedure.dc.html?proc={{ p.slug }}" class="surg-proc">{{ p.name }}</a>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <a href="Aria%20Korea%20Homepage.dc.html#services" class="navlink" style="font-weight:600; font-size:15px; color:#122a3a;">サービス</a>
+        <a href="Aria%20Korea%20Homepage.dc.html#story" class="navlink" style="font-weight:600; font-size:15px; color:#122a3a;">私たちの物語</a>
+        <a href="blog.dc.html" class="navlink" style="font-weight:600; font-size:15px; color:var(--accent);">ブログ</a>
+        <div class="nav-lang {{ langClass }}">
+          <button type="button" class="lang-btn" onClick="{{ onLangToggle }}" aria-label="Change language">
+            <svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><circle cx="12" cy="8" r="4" fill="#BC002D"/></svg>
+            <i data-lucide="chevron-down" class="lang-chev" style="width:15px; height:15px;"></i>
+          </button>
+          <div class="lang-menu">
+            <a href="#" class="lang-item" data-lang="ko"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><circle cx="12" cy="8" r="3.5" fill="#CD2E3A"/><path d="M12 4.5a3.5 3.5 0 0 0 0 7 1.75 1.75 0 0 0 0-3.5 1.75 1.75 0 0 1 0-3.5z" fill="#0047A0"/></svg> 한국어</a>
+            <a href="#" class="lang-item" data-lang="en"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><g fill="#B22234"><rect width="24" height="1.23" y="0"/><rect width="24" height="1.23" y="2.46"/><rect width="24" height="1.23" y="4.92"/><rect width="24" height="1.23" y="7.38"/><rect width="24" height="1.23" y="9.84"/><rect width="24" height="1.23" y="12.3"/><rect width="24" height="1.23" y="14.77"/></g><rect width="10" height="8.6" fill="#3C3B6E"/></svg> English</a>
+            <a href="#" class="lang-item" data-lang="zh-cn"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#DE2910"/><path d="M4.5 3 5.2 5.1 7.4 5.1 5.6 6.4 6.3 8.5 4.5 7.2 2.7 8.5 3.4 6.4 1.6 5.1 3.8 5.1z" fill="#FFDE00"/><circle cx="9" cy="2.4" r=".7" fill="#FFDE00"/><circle cx="10.4" cy="4" r=".7" fill="#FFDE00"/><circle cx="10.4" cy="6.2" r=".7" fill="#FFDE00"/><circle cx="9" cy="7.8" r=".7" fill="#FFDE00"/></svg> 中文（简体）</a>
+            <a href="#" class="lang-item" data-lang="zh-tw"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#FE0000"/><rect width="12" height="8" fill="#000095"/><circle cx="6" cy="4" r="2.6" fill="#fff"/><circle cx="6" cy="4" r="1.5" fill="#000095"/></svg> 繁體中文</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header style="background:linear-gradient(180deg,#eef6fa 0%,#ffffff 100%); border-bottom:1px solid #e1edf3;">
+    <div style="max-width:1180px; margin:0 auto; padding:clamp(44px,6vw,84px) clamp(20px,5vw,72px); display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:24px;">
+      <div style="max-width:640px;">
+        <div style="font:700 13px/1 'Noto Sans JP'; letter-spacing:.14em; text-transform:uppercase; color:#2e9fc0; margin-bottom:16px;">アリアコーポレーション ブログ</div>
+        <h1 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:800; font-size:clamp(34px,5vw,58px); line-height:1.05; letter-spacing:-.02em; margin:0 0 18px;">ガイド＆回復ストーリー</h1>
+        <p style="font-size:clamp(16px,1.6vw,19px); line-height:1.65; color:#5a7488; margin:0;">韓国渡航を計画する患者様のために、Aria Corporationのチームが執筆・公開している記事です。</p>
+      </div>
+    </div>
+  </header>
+
+  <main style="flex:1;">
+    <div style="max-width:1180px; margin:0 auto; padding:clamp(36px,5vw,64px) clamp(20px,5vw,72px);">
+
+      <!-- Filter chips -->
+      <div style="display:flex; flex-wrap:wrap; gap:9px; margin-bottom:36px;">
+        <sc-for list="{{ filterChips }}" as="f" hint-placeholder-count="5">
+          <button type="button" onClick="{{ f.onClick }}" style="font:inherit; font-size:13.5px; font-weight:600; cursor:pointer; padding:8px 16px; border-radius:999px; border:1px solid {{ f.border }}; color:{{ f.color }}; background:{{ f.bg }};">{{ f.label }}</button>
+        </sc-for>
+      </div>
+
+      <!-- Posts -->
+      <sc-if value="{{ hasPosts }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:22px;">
+          <sc-for list="{{ visiblePosts }}" as="p" hint-placeholder-count="3">
+            <article class="lift" onClick="{{ p.onOpen }}" style="display:flex; flex-direction:column; background:#fff; border:1px solid #e1edf3; border-radius:22px; overflow:hidden; box-shadow:0 1px 2px rgba(16,41,61,.04); cursor:pointer;">
+              <sc-if value="{{ p.hasCover }}" hint-placeholder-val="{{ false }}">
+                {{ p.coverEl }}
+              </sc-if>
+              <sc-if value="{{ p.noCover }}" hint-placeholder-val="{{ true }}">
+                <div class="ph" style="height:200px;"><span class="ph-l">{{ p.cat }}</span></div>
+              </sc-if>
+              <div style="padding:24px 26px 26px; display:flex; flex-direction:column; flex:1;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:13px;">
+                  <span style="font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#2e9fc0;">{{ p.cat }}</span>
+                  <span style="font-size:12.5px; color:#9aabb6;">{{ p.dateStr }}</span>
+                </div>
+                <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:600; font-size:20px; line-height:1.3; margin:0 0 12px; color:#122a3a;">{{ p.title }}</h3>
+                <p style="font-size:14.5px; line-height:1.6; color:#5a7488; margin:0 0 18px;">{{ p.excerpt }}</p>
+                <div style="margin-top:auto; display:inline-flex; align-items:center; gap:7px; color:#122a3a; font-weight:700; font-size:14.5px;">記事を読む <i data-lucide="arrow-right" style="font-size:16px;"></i></div>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- Empty state -->
+      <sc-if value="{{ noPosts }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center; background:#fff; border:1px dashed #cfe0e9; border-radius:24px; padding:clamp(48px,7vw,88px) 28px;">
+          <div style="width:62px; height:62px; border-radius:18px; background:#f0f6f9; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+            <i data-lucide="feather" style="font-size:26px; color:var(--accent);"></i>
+          </div>
+          <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:22px; margin:0 0 10px;">まだ投稿がありません</h3>
+          <p style="font-size:15px; color:#5a7488; margin:0 0 24px;">最初の記事を公開すると、ここに表示されます。</p>
+          <button type="button" onClick="{{ onNew }}" style="display:inline-flex; align-items:center; gap:9px; background:var(--accent); color:#fff; font:inherit; font-weight:700; font-size:15px; padding:13px 22px; border:0; border-radius:13px; cursor:pointer;"><i data-lucide="pen-line" style="font-size:17px;"></i> 新規投稿を書く</button>
+        </div>
+      </sc-if>
+
+    </div>
+  </main>
+
+  <!-- ===== Composer overlay ===== -->
+  <sc-if value="{{ composerOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; inset:0; z-index:120; background:rgba(10,28,40,.55); backdrop-filter:blur(3px); display:flex; align-items:flex-start; justify-content:center; padding:clamp(16px,4vh,56px) 18px; overflow:auto; animation:fadeIn .2s ease;" onClick="{{ onBackdrop }}">
+      <div style="width:100%; max-width:720px; background:#fff; border-radius:24px; box-shadow:0 50px 100px -30px rgba(8,22,33,.6); animation:popIn .26s ease;" onClick="{{ stop }}">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:22px 26px; border-bottom:1px solid #eef4f7;">
+          <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:21px; margin:0;">新規記事を作成</h2>
+          <button type="button" onClick="{{ onClose }}" aria-label="Close" style="width:38px; height:38px; border-radius:11px; border:1px solid #e1edf3; background:#fff; color:#5a7488; cursor:pointer; display:flex; align-items:center; justify-content:center;"><i data-lucide="x" style="font-size:19px;"></i></button>
+        </div>
+        <div style="padding:24px 26px; display:flex; flex-direction:column; gap:20px;">
+          <div>
+            <label style="display:block; font-size:13px; font-weight:700; color:#3f6075; margin-bottom:8px;">タイトル</label>
+            <input type="text" class="fld" placeholder="例：韓国での鼻整形：完全ガイド" value="{{ draft.title }}" onInput="{{ onTitle }}">
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:18px;">
+            <div style="flex:1; min-width:200px;">
+              <label style="display:block; font-size:13px; font-weight:700; color:#3f6075; margin-bottom:8px;">カテゴリー</label>
+              <select class="fld" value="{{ draft.cat }}" onChange="{{ onCat }}">
+                <sc-for list="{{ blogCats }}" as="bc" hint-placeholder-count="4">
+                  <option value="{{ bc }}">{{ bc }}</option>
+                </sc-for>
+              </select>
+            </div>
+            <div style="flex:1; min-width:200px;">
+              <label style="display:block; font-size:13px; font-weight:700; color:#3f6075; margin-bottom:8px;">カバー画像 <span style="color:#9aabb6; font-weight:500;">（任意）</span></label>
+              <label class="fld" style="display:flex; align-items:center; gap:9px; cursor:pointer; color:#5a7488;">
+                <i data-lucide="image-plus" style="font-size:18px;"></i>
+                <span>{{ coverLabel }}</span>
+                <input type="file" accept="image/*" onChange="{{ onCover }}" style="display:none;">
+              </label>
+            </div>
+          </div>
+          <sc-if value="{{ hasDraftCover }}" hint-placeholder-val="{{ false }}">
+            <div style="position:relative; border-radius:14px; overflow:hidden; border:1px solid #e1edf3;">
+              {{ draftCoverEl }}
+              <button type="button" onClick="{{ onClearCover }}" style="position:absolute; top:10px; right:10px; width:32px; height:32px; border-radius:9px; border:0; background:rgba(10,28,40,.6); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;"><i data-lucide="trash-2" style="font-size:16px;"></i></button>
+            </div>
+          </sc-if>
+          <div>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px;">
+              <label style="font-size:13px; font-weight:700; color:#3f6075;">本文</label>
+              <label style="display:inline-flex; align-items:center; gap:7px; cursor:pointer; font-size:13px; font-weight:700; color:var(--accent);">
+                <i data-lucide="image-plus" style="font-size:16px;"></i> 画像を挿入
+                <input type="file" accept="image/*" onChange="{{ onBodyImage }}" style="display:none;">
+              </label>
+            </div>
+            <textarea id="composer-body" class="fld" placeholder="こちらに記事を入力してください。段落は空行で区切ってください。" value="{{ draft.body }}" onInput="{{ onBody }}"></textarea>
+            <div style="font-size:12px; color:#9aabb6; margin-top:8px; line-height:1.55;">ヒント：行頭に<strong>##</strong>を付けると見出し、<strong>-</strong>を付けると箇条書きになります。<strong>画像を挿入</strong>でカーソル位置に写真を挿入できます。</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px 26px; border-top:1px solid #eef4f7;">
+          <span style="font-size:13px; color:#9aabb6;">{{ saveHint }}</span>
+          <div style="display:flex; gap:10px;">
+            <button type="button" onClick="{{ onClose }}" style="font:inherit; font-weight:600; font-size:14.5px; color:#3f6075; background:#fff; border:1px solid #e1edf3; border-radius:12px; padding:12px 20px; cursor:pointer;">キャンセル</button>
+            <button type="button" onClick="{{ onPublish }}" style="font:inherit; font-weight:700; font-size:14.5px; color:#fff; background:var(--accent); border:0; border-radius:12px; padding:12px 24px; cursor:pointer; display:inline-flex; align-items:center; gap:8px;"><i data-lucide="send" style="font-size:16px;"></i> 公開する</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===== Reader overlay ===== -->
+  <sc-if value="{{ readerOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; inset:0; z-index:120; background:rgba(10,28,40,.55); backdrop-filter:blur(3px); display:flex; align-items:flex-start; justify-content:center; padding:clamp(16px,4vh,56px) 18px; overflow:auto; animation:fadeIn .2s ease;" onClick="{{ onBackdrop }}">
+      <article style="width:100%; max-width:760px; background:#fff; border-radius:24px; overflow:hidden; box-shadow:0 50px 100px -30px rgba(8,22,33,.6); animation:popIn .26s ease;" onClick="{{ stop }}">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 20px; position:sticky; top:0; background:rgba(255,255,255,.92); backdrop-filter:blur(6px); border-bottom:1px solid #eef4f7; z-index:2;">
+          <button type="button" onClick="{{ onClose }}" style="display:inline-flex; align-items:center; gap:7px; font:inherit; font-weight:600; font-size:14px; color:#3f6075; background:#fff; border:1px solid #e1edf3; border-radius:11px; padding:9px 15px; cursor:pointer;"><i data-lucide="arrow-left" style="font-size:16px;"></i> 一覧に戻る</button>
+          <button type="button" onClick="{{ onDelete }}" aria-label="Delete post" style="display:inline-flex; align-items:center; gap:7px; font:inherit; font-weight:600; font-size:13.5px; color:#c4453a; background:#fff; border:1px solid #f0d4d0; border-radius:11px; padding:9px 14px; cursor:pointer;"><i data-lucide="trash-2" style="font-size:15px;"></i> 削除</button>
+        </div>
+        <sc-if value="{{ reading.hasCover }}" hint-placeholder-val="{{ false }}">
+          {{ reading.coverEl }}
+        </sc-if>
+        <div style="padding:clamp(28px,4vw,48px);">
+          <div style="display:flex; align-items:center; gap:11px; margin-bottom:18px;">
+            <span style="font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#2e9fc0;">{{ reading.cat }}</span>
+            <span style="font-size:13px; color:#9aabb6;">{{ reading.dateStr }}</span>
+          </div>
+          <h1 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:800; font-size:clamp(28px,3.6vw,40px); line-height:1.12; letter-spacing:-.02em; margin:0 0 26px;">{{ reading.title }}</h1>
+          <div style="font-size:17px; line-height:1.8; color:#37505f;">
+            <sc-for list="{{ readParas }}" as="para" hint-placeholder-count="4">
+              <sc-if value="{{ para.isH }}" hint-placeholder-val="{{ false }}">
+                <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(20px,2.2vw,25px); line-height:1.25; letter-spacing:-.01em; color:#122a3a; margin:32px 0 12px;">{{ para.t }}</h2>
+              </sc-if>
+              <sc-if value="{{ para.isLi }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex; gap:12px; align-items:flex-start; margin:0 0 11px;">
+                  <span style="flex:none; width:7px; height:7px; border-radius:999px; background:var(--accent); margin-top:12px;"></span>
+                  <p style="margin:0;">{{ para.t }}</p>
+                </div>
+              </sc-if>
+              <sc-if value="{{ para.isImg }}" hint-placeholder-val="{{ false }}">
+                <figure style="margin:8px 0 24px;">{{ para.imgEl }}</figure>
+              </sc-if>
+              <sc-if value="{{ para.isP }}" hint-placeholder-val="{{ true }}">
+                <p style="margin:0 0 20px;">{{ para.t }}</p>
+              </sc-if>
+            </sc-for>
+          </div>
+        </div>
+      </article>
+    </div>
+  </sc-if>
+
+  <!-- Footer -->
+  <footer style="background:#0e2738; color:#fff; padding:48px clamp(20px,5vw,72px);">
+    <div style="max-width:1180px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:18px;">
+      <img src="assets/aria-logo-white-trim.png" alt="Ariacorporation" style="height:26px; width:auto;">
+      <div style="font-size:13.5px; color:rgba(255,255,255,.6);">© 2026 Ariacorporation. All rights reserved.</div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    cats: [], surgOpen: false, langOpen: false,
+    posts: [], filter: 'All',
+    composerOpen: false, reading: null,
+    draft: { title: '', cat: '手術ガイド', cover: '', body: '', bodyImages: [] },
+  };
+  STORE = 'aria_blog_posts_v4';
+  CATS = ['\u624b\u8853\u30ac\u30a4\u30c9', '\u56de\u5fa9\u306e\u30d2\u30f3\u30c8', '\u97d3\u56fd\u65c5\u884c', '\u60a3\u8005\u69d8\u306e\u58f0'];
+
+  componentDidMount(){
+    import('./surgery-data.js').then((m) => this.setState({ cats: m.SURGERY_CATEGORIES })).catch(() => {});
+    this._load();
+    this._onDocClick = (e) => {
+      if (this.state.langOpen && !(e.target.closest && e.target.closest('.nav-lang'))) this.setState({ langOpen: false });
+    };
+    document.addEventListener('click', this._onDocClick);
+    this._icons();
+  }
+  componentWillUnmount(){ document.removeEventListener('click', this._onDocClick); }
+  componentDidUpdate(){ this._icons(); }
+  _icons(){ try { if (window.lucide) window.lucide.createIcons(); } catch (e) {} }
+
+  _load(){
+    let posts = [];
+    try {
+      const raw = localStorage.getItem(this.STORE);
+      if (raw) posts = JSON.parse(raw);
+    } catch (e) {}
+    if (!Array.isArray(posts) || posts.length === 0) posts = this._seed();
+    this.setState({ posts });
+  }
+  _persist(posts){
+    try { localStorage.setItem(this.STORE, JSON.stringify(posts)); } catch (e) {}
+  }
+  _seed(){
+    const now = Date.now();
+    const day = 86400000;
+    const s = [
+      { cat: '手術ガイド', title: '韓国での鼻整形：2026年完全ガイド',
+        body: '海外で鼻整形を受けるという決断は大きなものですが、韓国は世界で最も信頼される渡航先の一つとなっています。\n\nこのガイドでは、現実的な費用感、一般的な回復スケジュール、信頼できるクリニックの選び方について解説します。\n\n（これはサンプル記事です——編集・削除して、「新規投稿」ボタンからご自身の記事を公開してください。）' },
+      { cat: '回復のヒント', title: '術後7日間の過ごし方：知っておきたいこと', cover: 'assets/first-7-days-cover.png',
+        body: `海外での手術は、特に手術直後の数日間、不安に感じることも少なくありません。韓国は優れた専門医、最新の病院設備、行き届いた看護ケアで知られていますが、回復期間中に何が「普通」なのかを知っておくことで、不安の多くを和らげることができます。ここでは、最初の1週間がどのようなものになるかを理解していただくための、日ごとの分かりやすいガイドをご紹介します。
+
+## 0～1日目：手術直後
+
+手術直後は、麻酔の影響でまだ意識がぼんやりしていることが多いでしょう。薬の効果が切れるにつれて、寒気、吐き気、混乱、異常なのどの渇きを感じるのはごく普通のことです。この時期は看護師が頻繁にバイタルサインを確認しますので、血圧測定や体温測定が頻繁に行われても心配はいりません。
+
+痛みは最初の24時間で最も強く感じられることが一般的です。強い不快感がある場合は必ず看護師に伝えてください——コミュニケーションを取ることで痛みのコントロールがしやすくなります。
+
+## 2～3日目：早期の離床
+
+韓国の医師は、座る、介助を受けながら少し歩くなど、できるだけ早い段階での離床を勧めることが多いです。これは決して患者様を苦しませるためではなく、早期の離床が血栓の予防、肺機能のサポート、全体的な治癒の促進につながるためです。
+
+切開部周辺の腫れ、あざ、突っ張り感が出ることが予想されます。最初の数日間の軽い発熱（38°C未満）も正常な炎症反応であることがありますが、医療チームが注意深く経過を観察します。
+
+この頃から食事も段階的に進みます——水分から始まり、流動食、そして体調に応じて軟らかい食事へと移行します。特に美容施術後は、腫れの軽減のためかぼちゃジュースがよく勧められます。
+
+## 3～5日目：生活リズムが整い始める
+
+この頃になると、多くの患者様が体力の回復と痛みの軽減を感じ始めますが、回復のペースは人それぞれです。創部のケアが日課の一部になり、看護師が切開部を確認し包帯を交換しながら、退院後のケア方法についても指導します。
+
+韓国に渡航して手術を受ける場合、多くの大規模クリニックでは国際患者様向けに通訳サービスを提供しています。また、薬の説明、術後の指示、退院計画の説明など、治療全体を通して言語サポートを行う医療エージェンシーと連携することも可能です。言葉の壁を感じたら、ケアの内容を十分に理解できるよう、遠慮なくサポートを依頼してください。
+
+## 5～7日目：最終フォローアップ・抜糸
+
+1週目の終わりに近づくと、国際患者様は通常、帰国前の最終フォローアップと抜糸のためにクリニックに戻ります。退院前には、以下の内容を受け取るはずです：
+
+- 明確な創部ケアの指示
+- 薬の一覧と服用スケジュール
+- 活動制限（重いものを持たない、入浴方法、1カ月間のサウナ利用禁止など）
+- すぐに受診すべき危険なサインの説明
+- フォローアップ受診の日程
+
+## 注意すべき危険なサイン
+
+以下のいずれかに気づいた場合は、速やかにクリニックにご連絡ください：
+
+- 38.5°Cを超える発熱
+- 切開部の赤み・熱感・分泌物の増加
+- 薬でコントロールできない強い、または悪化する痛み
+- 息切れや胸の痛み
+
+## 海外からの患者様へのアドバイス
+
+自国を離れて手術から回復することは、それだけで大きなストレスになります。少しの準備が大きな助けになります。クリニックの連絡先を手元に用意し、通訳担当者の番号を携帯電話に保存しておくとよいでしょう。
+
+最も大切なのは、ご自身に対して忍耐強くあることです。最初の1週間は完璧を目指すのではなく、穏やかな回復のための期間です——体はそれぞれのペースで治癒していきます。` },
+      { cat: '韓国旅行', title: '朝は「水洗顔」だけで大丈夫？肌の専門家に聞いてみた', cover: 'assets/morning-rinse-cover.png',
+        body: `多くの人が、朝は水だけで洗顔する方が肌の健康に良いと信じています。夜はメイクや微細なほこりを落とすためにダブル洗顔をするのだから、朝は肌への刺激を最小限に抑えるべきだという理屈です。私自身も皮膚科医のアドバイスに従い、半年間朝は水洗顔のみを続けたことがあります。当時は効果がありましたが、肌が回復しバリア機能が正常に戻ると、水だけのすすぎでは不十分だと気づきました。それどころか、毛穴を詰まらせるという逆効果さえありました。
+
+では、朝の洗顔を省略しても本当に良いのでしょうか？薬剤師のマルタ・マージ氏は、毎朝水とクレンザーで洗顔することの重要性を強調しています。就寝前にしっかり洗顔したのだから朝の肌は清潔だと思いがちですが、実は思っている以上に多くのものが夜の間に肌に蓄積しています。
+
+## 睡眠中に肌に起きていること
+
+肌洗浄の専門家クリスティーナ・ガルミケ氏は、「就寝前に肌を洗ってきれいにしたからといって、朝までその状態が保たれるわけではありません」と説明します。睡眠中、不純物、スキンケア製品の残留物、汗が肌の上に蓄積します。目には見えなくても、これらの残留物は毛穴を詰まらせ、酸化を引き起こす可能性があります。
+
+## 朝洗顔の重要性
+
+- 汗、皮脂、スキンケア製品の残留物を除去する
+- 黒ずみやニキビを予防する
+- 肌に酸素を供給し、微小血流を活性化する
+- 肌のキメと輝きを改善する
+- 美容液やクリームの効果を高める
+- 肌のバリア機能を強化する
+
+肌が敏感な状態やバリア機能が損なわれている場合は刺激を抑えることが大切ですが、肌の状態が回復したら、夜間に蓄積した皮脂や残留物はきちんと除去する必要があります。美容液やクリームなどの有効成分は、清潔に整えられた肌にのせて初めて正しく働きます。ガルミケ氏は「朝の洗顔は、肌を明るく健やかにし、次に使う製品を受け入れる準備を整えるための欠かせない習慣です」と述べています。
+
+朝きちんと洗顔することで、夜の間に蓄積した汗、皮脂、ヘアケア製品の残留物を取り除くことができます。これにより黒ずみやニキビを防ぎ、肌のキメを整えて自然な輝きを引き出します。ビタミンC、グリコール酸、ヒアルロン酸などの有効成分を含む製品を使用している場合、きちんと洗浄・準備された肌には、さらに高い効果が期待できます。
+
+## 朝の正しい洗顔方法
+
+- 適切なクレンザーを選ぶ：すべての肌タイプに同じ洗顔方法が適しているわけではありません。ご自身の肌タイプに合わせてクレンザーを選ぶことが大切です。皮脂の多い脂性肌・混合肌には、ナイアシンアミドやサリチル酸配合のジェルタイプやフォームタイプのクレンザーが適しています。逆に乾燥肌・敏感肌には、硫酸系界面活性剤を含まない、やさしいミルクタイプやクリームタイプのクレンザーがおすすめです。
+- 手で優しく塗布する：洗顔の方法も重要です。コットンでこするのではなく、手で顔を優しくマッサージするほうが良いでしょう。円を描くように約30秒間マッサージすることで、表面の汚れを落としながら血行を促進できます。
+- ぬるま湯ですすぐ：熱すぎるお湯は肌バリアを構成する脂質を傷める可能性があり、冷たすぎるお湯ではクレンザーの残留物を十分に落とせないことがあるため、ぬるま湯を使うのが最適です。
+- タオルはこすらず押さえる：最後に顔を拭くときは、こすらずに優しく押さえるようにして水分を取ります。清潔なタオルを使い、こまめに交換することも大切です。
+
+朝の洗顔は柔軟に考えるべきものです。今のご自身の肌の状態を観察し、必要に応じて洗顔方法を調整しましょう。水だけの洗顔がうまくいっているなら、そのまま続けて構いません。しかし肌の状態が変化したなら、新しい方法を試すタイミングかもしれません。一つの小さな習慣が、肌の状態を変えることがあります。` },
+    ];
+    return s.map((p, i) => ({ id: 'seed-' + i, ts: now - i * day, cover: '', ...p }));
+  }
+
+  _excerpt(body){
+    const t = (body || '')
+      .replace(/\[\[image:\d+\]\]/g, ' ')
+      .replace(/^##\s+/gm, '')
+      .replace(/^[-\u2022]\s+/gm, '')
+      .replace(/\s+/g, ' ').trim();
+    return t.length > 140 ? t.slice(0, 140).trim() + '…' : t;
+  }
+  _fmt(ts){
+    try {
+      return new Date(ts).toLocaleDateString('ja-JP', { year: 'numeric', month: 'short', day: 'numeric' });
+    } catch (e) { return ''; }
+  }
+
+  _openSurg(){ clearTimeout(this._surgTimer); this.setState({ surgOpen: true }); }
+  _closeSurg(){ clearTimeout(this._surgTimer); this._surgTimer = setTimeout(() => this.setState({ surgOpen: false }), 800); }
+
+  _newPost(){ this.setState({ composerOpen: true, draft: { title: '', cat: '手術ガイド', cover: '', body: '', bodyImages: [] } }); }
+  _publish(){
+    const d = this.state.draft;
+    if (!d.title.trim() || !d.body.trim()) { alert('タイトルと本文を入力してから公開してください。'); return; }
+    const post = { id: 'p-' + Date.now(), ts: Date.now(), title: d.title.trim(), cat: d.cat, cover: d.cover, body: d.body.trim(), bodyImages: d.bodyImages || [] };
+    const posts = [post, ...this.state.posts];
+    this._persist(posts);
+    this.setState({ posts, composerOpen: false });
+  }
+  _delete(){
+    const r = this.state.reading;
+    if (!r) return;
+    if (!confirm('この投稿を削除しますか？この操作は取り消せません。')) return;
+    const posts = this.state.posts.filter((p) => p.id !== r.id);
+    this._persist(posts);
+    this.setState({ posts, reading: null });
+  }
+  _onCover(e){
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => this.setState((s) => ({ draft: { ...s.draft, cover: reader.result } }));
+    reader.readAsDataURL(file);
+  }
+  _onBodyImage(e){
+    const file = e.target.files && e.target.files[0];
+    if (e.target) e.target.value = '';
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => this.setState((s) => {
+      const imgs = (s.draft.bodyImages || []).slice();
+      const idx = imgs.length;
+      imgs.push(reader.result);
+      const body = s.draft.body || '';
+      const ta = document.getElementById('composer-body');
+      let pos = body.length;
+      if (ta && typeof ta.selectionStart === 'number') pos = ta.selectionStart;
+      const before = body.slice(0, pos);
+      const lead = (before.length && !/\n$/.test(before)) ? '\n\n' : '';
+      const token = lead + '[[image:' + idx + ']]\n\n';
+      const newBody = before + token + body.slice(pos);
+      return { draft: { ...s.draft, body: newBody, bodyImages: imgs } };
+    });
+    reader.readAsDataURL(file);
+  }
+
+  renderVals(){
+    const accentChip = (active) => active
+      ? { bg: 'var(--accent)', color: '#fff', border: 'var(--accent)' }
+      : { bg: '#fff', color: '#3f6075', border: '#d9e6ed' };
+    const filterChips = ['All', ...this.CATS].map((label) => {
+      const c = accentChip(this.state.filter === label);
+      const display = label === 'All' ? 'すべて' : label;
+      return { label: display, ...c, onClick: () => this.setState({ filter: label }) };
+    });
+
+    const f = this.state.filter;
+    const visiblePosts = this.state.posts
+      .filter((p) => f === 'All' || p.cat === f)
+      .map((p) => ({
+        ...p,
+        hasCover: !!p.cover,
+        noCover: !p.cover,
+        coverEl: p.cover ? React.createElement('img', { src: p.cover, alt: '', style: { width: '100%', height: '200px', objectFit: 'cover', display: 'block' } }) : null,
+        excerpt: this._excerpt(p.body),
+        dateStr: this._fmt(p.ts),
+        onOpen: () => this.setState({ reading: p }),
+      }));
+
+    const reading = this.state.reading;
+    const readingObj = reading ? { ...reading, hasCover: !!reading.cover, coverEl: reading.cover ? React.createElement('img', { src: reading.cover, alt: '', style: { width: '100%', maxHeight: '360px', objectFit: 'cover', display: 'block' } }) : null, dateStr: this._fmt(reading.ts) } : { hasCover: false };
+    const readParas = reading
+      ? (() => { const bimgs = reading.bodyImages || []; return (reading.body || '').split(/\n+/).map((t) => t.trim()).filter(Boolean).map((t, i) => {
+          const mi = t.match(/^\[\[image:(\d+)\]\]$/);
+          if (mi) { const src = bimgs[+mi[1]]; return { k: i, t: '', isH: false, isLi: false, isP: false, isImg: true, imgEl: src ? React.createElement('img', { src: src, alt: '', style: { width: '100%', borderRadius: '16px', display: 'block', margin: '8px 0' } }) : null }; }
+          let t2 = t, isH = false, isLi = false;
+          if (/^##\s+/.test(t)) { isH = true; t2 = t.replace(/^##\s+/, ''); }
+          else if (/^[-\u2022]\s+/.test(t)) { isLi = true; t2 = t.replace(/^[-\u2022]\s+/, ''); }
+          return { k: i, t: t2, isH: isH, isLi: isLi, isP: !isH && !isLi, isImg: false, imgEl: null };
+        }); })()
+      : [];
+
+    const d = this.state.draft;
+
+    return {
+      cats: this.state.cats,
+      surgClass: this.state.surgOpen ? 'open' : '',
+      onSurgEnter: () => this._openSurg(),
+      onSurgLeave: () => this._closeSurg(),
+      langClass: this.state.langOpen ? 'open' : '',
+      onLangToggle: (e) => { e.preventDefault(); e.stopPropagation(); this.setState((s) => ({ langOpen: !s.langOpen })); },
+
+      blogCats: this.CATS,
+      filterChips,
+      visiblePosts,
+      hasPosts: visiblePosts.length > 0,
+      noPosts: visiblePosts.length === 0,
+
+      onNew: () => this._newPost(),
+      composerOpen: this.state.composerOpen,
+      onClose: () => this.setState({ composerOpen: false, reading: null }),
+      onBackdrop: () => this.setState({ composerOpen: false, reading: null }),
+      stop: (e) => e.stopPropagation(),
+
+      draft: d,
+      hasDraftCover: !!d.cover,
+      draftCoverEl: d.cover ? React.createElement('img', { src: d.cover, alt: '', style: { width: '100%', maxHeight: '240px', objectFit: 'cover', display: 'block' } }) : null,
+      coverLabel: d.cover ? '\u753b\u50cf\u3092\u5909\u66f4' : '\u753b\u50cf\u3092\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9',
+      saveHint: '\u3053\u306e\u30d6\u30e9\u30a6\u30b6\u306b\u4fdd\u5b58\u3055\u308c\u307e\u3057\u305f',
+      onTitle: (e) => this.setState((s) => ({ draft: { ...s.draft, title: e.target.value } })),
+      onCat: (e) => this.setState((s) => ({ draft: { ...s.draft, cat: e.target.value } })),
+      onBody: (e) => this.setState((s) => ({ draft: { ...s.draft, body: e.target.value } })),
+      onCover: (e) => this._onCover(e),
+      onBodyImage: (e) => this._onBodyImage(e),
+      onClearCover: () => this.setState((s) => ({ draft: { ...s.draft, cover: '' } })),
+      onPublish: () => this._publish(),
+
+      readerOpen: !!reading,
+      reading: readingObj,
+      readParas,
+      onDelete: () => this._delete(),
+    };
+  }
+}
+</script>
+</body>
+</html>

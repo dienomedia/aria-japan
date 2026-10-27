@@ -1,0 +1,24 @@
+---
+// Lucide icon by kebab-case name (replaces <i data-lucide="…"> + createIcons()).
+// Sized like the prototype: svg.lucide { width:1em; height:1em } with font-size set by the caller.
+// Namespace import so deprecated aliases (e.g. building-2, alert-triangle) still resolve.
+import * as lucide from '@lucide/astro';
+
+interface Props {
+  name: string;
+  class?: string;
+  style?: string;
+  [key: string]: unknown;
+}
+
+const { name, class: className, ...rest } = Astro.props;
+
+const pascal = name
+  .split('-')
+  .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+  .join('');
+const Cmp = (lucide as Record<string, any>)[pascal];
+if (!Cmp) throw new Error(`Unknown Lucide icon: "${name}"`);
+---
+
+<Cmp class={['lucide', className].filter(Boolean).join(' ')} {...rest} />

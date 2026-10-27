@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<style>
+  :root{ --accent:#FF7A4D; }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{ background:#eef6fa; }
+  a{ text-decoration:none; color:inherit; }
+  .ph{ position:relative; overflow:hidden; background:repeating-linear-gradient(135deg,#dbe8ef 0 11px,#e9f2f7 11px 22px); }
+  .ph > .ph-l{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:10px; font:600 11px/1.5 ui-monospace,Menlo,monospace; letter-spacing:.1em; color:#7d99a8; text-transform:uppercase; }
+  .navlink{ position:relative; }
+  .navlink:after{ content:""; position:absolute; left:0; bottom:-6px; height:2px; width:0; background:var(--accent); transition:width .25s ease; }
+  .navlink:hover:after{ width:100%; }
+  [data-lucide]{ width:1em; height:1em; }
+  .sib{ display:inline-flex; align-items:center; gap:7px; padding:9px 15px; background:#fff; border:1px solid #e1edf3; border-radius:999px; font-size:13.5px; font-weight:600; color:#3f6075; transition:border-color .15s ease, color .15s ease; }
+  .sib:hover{ border-color:var(--accent); color:var(--accent); }
+  /* ---- Surgeries nav mega-menu (identical behavior across pages) ---- */
+  .nav-surg{ position:relative; }
+  .surg-mega{ position:absolute; top:100%; left:50%; transform:translateX(-50%); padding-top:16px; opacity:0; visibility:hidden; transition:opacity .2s ease; z-index:60; pointer-events:none; }
+  .nav-surg.open .surg-mega{ opacity:1; visibility:visible; pointer-events:auto; }
+  .surg-mega-inner{ position:relative; min-width:300px; background:#fff; border:1px solid #e1edf3; border-radius:18px; box-shadow:0 34px 70px -24px rgba(16,41,61,.45); padding:10px; }
+  .surg-cat{ position:relative; }
+  .surg-cat-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:11px 15px; border-radius:11px; color:#122a3a; font-weight:600; font-size:14.5px; cursor:pointer; transition:background .15s ease, color .15s ease; }
+  .surg-cat:hover .surg-cat-row{ background:#f0f6f9; color:var(--accent); }
+  .surg-cat-row .chev{ opacity:.4; transition:transform .15s ease, opacity .15s ease; }
+  .surg-cat:hover .surg-cat-row .chev{ opacity:1; transform:translateX(3px); color:var(--accent); }
+  .surg-sub{ position:absolute; left:100%; top:0; padding-left:14px; opacity:0; visibility:hidden; transform:translateX(6px); transition:opacity .18s ease, transform .18s ease; pointer-events:none; }
+  .surg-cat:hover .surg-sub{ opacity:1; visibility:visible; transform:translateX(0); pointer-events:auto; }
+  .surg-sub-inner{ min-width:288px; max-width:330px; background:#fff; border:1px solid #e1edf3; border-radius:18px; box-shadow:0 34px 70px -24px rgba(16,41,61,.45); padding:18px 18px 14px; }
+  .surg-proc{ display:block; padding:8px 11px; border-radius:9px; font-size:13.5px; font-weight:500; color:#3f6075; transition:background .14s ease, color .14s ease; }
+  .surg-proc:hover{ background:#f0f6f9; color:var(--accent); }
+  /* ---- Language switcher ---- */
+  .nav-lang{ position:relative; }
+  .lang-btn{ display:inline-flex; align-items:center; gap:7px; background:#f0f6f9; border:1px solid #dceaf1; padding:7px 11px 7px 9px; border-radius:999px; cursor:pointer; color:#122a3a; font:inherit; line-height:0; }
+  .lang-btn:hover{ background:#e6f1f6; }
+  .lang-btn .lang-chev{ transition:transform .2s ease; }
+  .nav-lang.open .lang-btn .lang-chev{ transform:rotate(180deg); }
+  .lang-menu{ position:absolute; top:100%; right:0; margin-top:14px; min-width:188px; background:#fff; border:1px solid #e1edf3; border-radius:14px; box-shadow:0 34px 70px -24px rgba(16,41,61,.45); padding:7px; opacity:0; visibility:hidden; transform:translateY(-8px); transition:opacity .18s ease, transform .18s ease; z-index:70; }
+  .nav-lang.open .lang-menu{ opacity:1; visibility:visible; transform:translateY(0); }
+  .lang-item{ display:flex; align-items:center; gap:11px; padding:9px 12px; border-radius:10px; font-size:14px; font-weight:600; color:#122a3a; cursor:pointer; transition:background .14s ease; }
+  .lang-item:hover{ background:#f0f6f9; }
+  .lang-flag{ width:24px; height:16px; border-radius:3px; flex:none; box-shadow:0 0 0 1px rgba(16,41,61,.12); display:block; }
+  /* ---- Cartilage gallery: 4 across, drops to 2x2 on narrow ---- */
+  .cartilage-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(16px,2.2vw,26px); }
+  @media (max-width:760px){ .cartilage-grid{ grid-template-columns:repeat(2,1fr); } }
+  /* ---- Step gallery: count-driven columns ---- */
+  .step-grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(16px,2.2vw,28px); }
+  .step-grid-4{ display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(16px,2.2vw,28px); }
+  .step-grid-2{ display:grid; grid-template-columns:repeat(2,1fr); gap:clamp(18px,3vw,34px); }
+  @media (max-width:760px){ .step-grid-3, .step-grid-4{ grid-template-columns:repeat(2,1fr); } .step-grid-2{ grid-template-columns:1fr; } }
+</style>
+</helmet>
+
+<div style="font-family:'Noto Sans JP',system-ui,sans-serif; color:#122a3a; background:#eef6fa; min-height:100vh; -webkit-font-smoothing:antialiased; display:flex; flex-direction:column;">
+  <div aria-label="SNS" style="position:fixed; right:clamp(14px,2vw,26px); bottom:clamp(18px,3vw,30px); z-index:80; display:flex; flex-direction:column; gap:10px;">
+    <a href="https://x.com/_Ariajapan" target="_blank" rel="noopener" aria-label="X" style="width:50px; height:50px; border-radius:50%; background:#000000; color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 24px -10px rgba(16,41,61,.55); transition:transform .2s ease;" style-hover="transform:translateY(-3px);"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px; height:20px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    <a href="https://www.instagram.com/ariacorp_japan" target="_blank" rel="noopener" aria-label="Instagram" style="width:50px; height:50px; border-radius:50%; background:linear-gradient(45deg,#f9a33b 0%,#e1306c 50%,#833ab4 100%); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 24px -10px rgba(16,41,61,.55); transition:transform .2s ease;" style-hover="transform:translateY(-3px);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px; height:22px;"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+    <a href="https://lin.ee/3KJTZXJ" target="_blank" rel="noopener" aria-label="LINE" style="width:50px; height:50px; border-radius:50%; background:#06C755; color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 24px -10px rgba(16,41,61,.55); transition:transform .2s ease;" style-hover="transform:translateY(-3px);"><svg viewBox="0 0 24 24" fill="currentColor" style="width:26px; height:26px;"><path d="M12 2.5C6.48 2.5 2 6.12 2 10.58c0 4 3.55 7.35 8.35 7.98.32.07.77.21.88.49.1.25.07.65.03.9l-.14.85c-.04.25-.2.98.86.53 1.06-.45 5.73-3.37 7.82-5.78C21.24 14 22 12.38 22 10.58 22 6.12 17.52 2.5 12 2.5zM8.1 12.96H6.11a.53.53 0 0 1-.53-.53V8.46a.53.53 0 1 1 1.06 0v3.44H8.1a.53.53 0 1 1 0 1.06zm2.05-.53a.53.53 0 1 1-1.06 0V8.46a.53.53 0 1 1 1.06 0zm4.79 0a.53.53 0 0 1-.95.32l-2.04-2.78v2.46a.53.53 0 1 1-1.06 0V8.46a.53.53 0 0 1 .95-.32l2.04 2.78V8.46a.53.53 0 1 1 1.06 0zm3.21-2.51a.53.53 0 1 1 0 1.06h-1.46v.92h1.46a.53.53 0 1 1 0 1.06h-1.99a.53.53 0 0 1-.53-.53V8.46c0-.29.24-.53.53-.53h1.99a.53.53 0 1 1 0 1.06h-1.46v.93z"/></svg></a>
+  </div>
+
+
+  <!-- Nav (identical Surgeries mega-menu) -->
+  <nav style="background:#fff; border-bottom:1px solid #e1edf3; position:sticky; top:0; z-index:40;">
+    <div style="max-width:1320px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:18px clamp(20px,5vw,72px);">
+      <a href="Aria%20Korea%20Homepage.dc.html" style="display:flex; align-items:center;">
+        <img src="assets/aria-logo-navy-trim.png" alt="Ariacorporation" style="height:28px; width:auto; display:block;">
+      </a>
+      <div style="display:flex; align-items:center; gap:32px;">
+        <a href="about.dc.html" class="navlink" style="font-weight:600; font-size:15px; color:#122a3a;">会社概要</a>
+        <div class="nav-surg {{ surgClass }}" onMouseEnter="{{ onSurgEnter }}" onMouseLeave="{{ onSurgLeave }}">
+          <a href="Aria%20Korea%20Homepage.dc.html#surgeries" class="navlink" style="display:inline-flex; align-items:center; gap:5px; font-weight:600; font-size:15px; color:#122a3a;">施術一覧 <i data-lucide="chevron-down" style="font-size:16px;"></i></a>
+          <div class="surg-mega">
+            <div class="surg-mega-inner">
+              <sc-for list="{{ cats }}" as="c" hint-placeholder-count="10">
+                <div class="surg-cat">
+                  <a href="surgery-category.dc.html?cat={{ c.slug }}" class="surg-cat-row">
+                    <span>{{ c.name }}</span>
+                    <i data-lucide="chevron-right" class="chev" style="font-size:16px;"></i>
+                  </a>
+                  <div class="surg-sub">
+                    <div class="surg-sub-inner">
+                      <a href="surgery-category.dc.html?cat={{ c.slug }}" style="display:flex; align-items:center; justify-content:space-between; gap:14px; padding:0 11px 12px; margin-bottom:6px; border-bottom:1px solid #eef4f7;">
+                        <span style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:15px; color:#122a3a; white-space:pre-line;">{{ c.name }}</span>
+                        <span style="display:inline-flex; align-items:center; gap:5px; font-size:12.5px; font-weight:700; color:var(--accent); white-space:nowrap;">概要を見る <i data-lucide="arrow-up-right" style="font-size:14px;"></i></span>
+                      </a>
+                      <sc-for list="{{ c.procedures }}" as="p" hint-placeholder-count="6">
+                        <a href="procedure.dc.html?proc={{ p.slug }}" class="surg-proc">{{ p.name }}</a>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <a href="Aria%20Korea%20Homepage.dc.html#services" class="navlink" style="font-weight:600; font-size:15px; color:#122a3a;">サービス</a>
+        <a href="Aria%20Korea%20Homepage.dc.html#story" class="navlink" style="font-weight:600; font-size:15px; color:#122a3a;">私たちの物語</a>
+        <a href="blog.dc.html" class="navlink" style="font-weight:600; font-size:15px; color:#122a3a;">ブログ</a>
+        <div class="nav-lang {{ langClass }}">
+          <button type="button" class="lang-btn" onClick="{{ onLangToggle }}" aria-label="Change language">
+            <svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><circle cx="12" cy="8" r="4" fill="#BC002D"/></svg>
+            <i data-lucide="chevron-down" class="lang-chev" style="width:15px; height:15px;"></i>
+          </button>
+          <div class="lang-menu">
+            <a href="#" class="lang-item" data-lang="ko"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><circle cx="12" cy="8" r="3.5" fill="#CD2E3A"/><path d="M12 4.5a3.5 3.5 0 0 0 0 7 1.75 1.75 0 0 0 0-3.5 1.75 1.75 0 0 1 0-3.5z" fill="#0047A0"/></svg> 한국어</a>
+            <a href="#" class="lang-item" data-lang="en"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><g fill="#B22234"><rect width="24" height="1.23" y="0"/><rect width="24" height="1.23" y="2.46"/><rect width="24" height="1.23" y="4.92"/><rect width="24" height="1.23" y="7.38"/><rect width="24" height="1.23" y="9.84"/><rect width="24" height="1.23" y="12.3"/><rect width="24" height="1.23" y="14.77"/></g><rect width="10" height="8.6" fill="#3C3B6E"/></svg> English</a>
+            <a href="#" class="lang-item" data-lang="zh-cn"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#DE2910"/><path d="M4.5 3 5.2 5.1 7.4 5.1 5.6 6.4 6.3 8.5 4.5 7.2 2.7 8.5 3.4 6.4 1.6 5.1 3.8 5.1z" fill="#FFDE00"/><circle cx="9" cy="2.4" r=".7" fill="#FFDE00"/><circle cx="10.4" cy="4" r=".7" fill="#FFDE00"/><circle cx="10.4" cy="6.2" r=".7" fill="#FFDE00"/><circle cx="9" cy="7.8" r=".7" fill="#FFDE00"/></svg> 中文（简体）</a>
+            <a href="#" class="lang-item" data-lang="zh-tw"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#FE0000"/><rect width="12" height="8" fill="#000095"/><circle cx="6" cy="4" r="2.6" fill="#fff"/><circle cx="6" cy="4" r="1.5" fill="#000095"/></svg> 繁體中文</a>
+          </div>
+        </div>
+        <a href="https://lin.ee/3KJTZXJ" style="display:inline-flex; align-items:center; gap:9px; background:var(--accent); color:#fff; font-weight:700; font-size:14.5px; padding:11px 19px; border-radius:999px;">
+          <i data-lucide="message-circle" style="font-size:17px;"></i> LINEで予約
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero split: copy + explanatory image -->
+  <header style="background:linear-gradient(180deg,#eef6fa 0%,#ffffff 100%); border-bottom:1px solid #e1edf3;">
+    <div style="max-width:1320px; margin:0 auto; padding:clamp(26px,3.5vw,48px) clamp(20px,5vw,72px) clamp(40px,5vw,60px); display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:clamp(32px,4vw,60px); align-items:center;">
+      <div>
+        <div style="display:flex; align-items:center; gap:9px; font-size:13.5px; font-weight:600; color:#5a7488; margin-bottom:24px; flex-wrap:wrap;">
+          <a href="Aria%20Korea%20Homepage.dc.html" style="color:#5a7488;">ホーム</a>
+          <i data-lucide="chevron-right" style="font-size:15px; opacity:.5;"></i>
+          <a href="Aria%20Korea%20Homepage.dc.html#surgeries" style="color:#5a7488;">施術一覧</a>
+          <i data-lucide="chevron-right" style="font-size:15px; opacity:.5;"></i>
+          <a href="surgery-category.dc.html?cat={{ catSlug }}" style="color:#5a7488;">{{ catName }}</a>
+          <i data-lucide="chevron-right" style="font-size:15px; opacity:.5;"></i>
+          <span style="color:#122a3a; white-space:pre-line;">{{ name }}</span>
+        </div>
+        <div style="display:inline-flex; align-items:center; gap:8px; background:#eaf6fa; color:#2e9fc0; font-size:12.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:7px 14px; border-radius:999px; margin-bottom:20px;">
+{{ catName }}
+        </div>
+        <h1 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:800; font-size:clamp(32px,4.4vw,54px); line-height:1.06; letter-spacing:-.02em; margin:0 0 18px;">{{ name }}</h1>
+        <p style="font-size:clamp(16px,1.6vw,19px); line-height:1.6; color:#445d6e; max-width:540px; margin:0 0 30px; white-space:pre-line;">{{ summary }}</p>
+        <div style="display:flex; flex-wrap:wrap; gap:13px;">
+          <a href="https://lin.ee/3KJTZXJ" style="display:inline-flex; align-items:center; gap:10px; background:var(--accent); color:#fff; font-weight:700; font-size:16px; padding:15px 26px; border-radius:13px; box-shadow:0 16px 34px -16px rgba(255,122,77,.85);">
+            <i data-lucide="message-circle" style="font-size:19px;"></i> この手術について問い合わせる
+          </a>
+          <a href="surgery-category.dc.html?cat={{ catSlug }}" style="display:inline-flex; align-items:center; gap:9px; border:1.5px solid #cfdfe7; color:#122a3a; font-weight:700; font-size:16px; padding:15px 24px; border-radius:13px;">
+            {{ catName }}をすべて見る <i data-lucide="arrow-right" style="font-size:18px;"></i>
+          </a>
+        </div>
+      </div>
+      <div class="ph" style="aspect-ratio:4/3.2; border-radius:24px; min-height:300px; box-shadow:0 30px 60px -30px rgba(16,41,61,.4);">{{ heroImgEl }}<sc-if value="{{ noHeroImg }}" hint-placeholder-val="{{ true }}"><span class="ph-l">{{ heroLabel }}</span></sc-if></div>
+    </div>
+  </header>
+
+  <!-- Body -->
+  <main style="flex:1; max-width:1320px; width:100%; margin:0 auto; padding:clamp(40px,5vw,72px) clamp(20px,5vw,72px) clamp(56px,7vw,96px); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,340px); gap:clamp(32px,4vw,56px); align-items:start;">
+
+    <!-- Left column: content -->
+    <article>
+      <section style="margin-bottom:44px;">
+        <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(24px,2.6vw,30px); line-height:1.18; letter-spacing:-.01em; margin:0 0 16px;">この手術について</h2>
+        <sc-if value="{{ hasAbout }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <sc-for list="{{ aboutParas }}" as="para" hint-placeholder-count="2">
+              <p style="font-size:16.5px; line-height:1.75; color:#445d6e; margin:0; white-space:pre-line;">{{ para.text }}</p>
+            </sc-for>
+          </div>
+          <sc-for list="{{ aboutGroups }}" as="grp" hint-placeholder-count="0">
+            <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,21px); line-height:1.25; letter-spacing:-.01em; margin:30px 0 12px; white-space:pre-line;">{{ grp.heading }}</h3>
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <sc-for list="{{ grp.paras }}" as="para" hint-placeholder-count="2">
+                <p style="font-size:16.5px; line-height:1.75; color:#445d6e; margin:0; white-space:pre-line;">{{ para.text }}</p>
+              </sc-for>
+            </div>
+            <sc-if value="{{ grp.hasImages }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex; flex-direction:column; gap:clamp(16px,2vw,22px); margin-top:22px;">
+                <sc-for list="{{ grp.images }}" as="im" hint-placeholder-count="2">
+                  {{ im.el }}
+                </sc-for>
+              </div>
+            </sc-if>
+          </sc-for>
+          <sc-if value="{{ hasAboutFigure }}" hint-placeholder-val="{{ false }}">
+            <figure style="margin:28px 0 0;">
+              <sc-if value="{{ hasAfSide }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:clamp(22px,3vw,40px); align-items:center;">
+                  <div style="border-radius:18px; overflow:hidden; border:1px solid #e1edf3; background:#fff;">
+                    {{ aboutFigEl }}
+                  </div>
+                  <div style="display:flex; flex-direction:column; gap:16px;">
+                    <sc-for list="{{ afSideParas }}" as="sp" hint-placeholder-count="2">
+                      <p style="font-size:16px; line-height:1.72; color:#445d6e; margin:0; white-space:pre-line;">{{ sp.text }}</p>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ noAfSide }}" hint-placeholder-val="{{ true }}">
+              <div style="border-radius:18px; overflow:hidden; border:1px solid #e1edf3; background:#fbfcfd;">
+                {{ aboutFigEl }}
+              </div>
+              <sc-if value="{{ hasAfMeta }}" hint-placeholder-val="{{ false }}">
+              <figcaption style="margin-top:16px;">
+                <div style="display:flex; flex-wrap:wrap; gap:12px 26px; margin-bottom:12px;">
+                  <sc-for list="{{ afLegend }}" as="lg" hint-placeholder-count="2">
+                    <span style="display:inline-flex; align-items:center; gap:9px; font-size:14.5px; font-weight:600; color:#122a3a;">
+                      <span style="width:15px; height:15px; border-radius:4px; flex:none; background:{{ lg.color }}; box-shadow:0 0 0 1px rgba(16,41,61,.12);"></span>{{ lg.label }}
+                    </span>
+                  </sc-for>
+                </div>
+                <p style="font-size:14.5px; line-height:1.6; color:#5a7488; margin:0; white-space:pre-line;">{{ afCaption }}</p>
+              </figcaption>
+              </sc-if>
+              </sc-if>
+            </figure>
+          </sc-if>
+          <sc-if value="{{ hasMethods }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:38px;">
+              <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(20px,2.3vw,26px); line-height:1.2; letter-spacing:-.01em; margin:0 0 26px; color:#122a3a; white-space:pre-line;">{{ methodsHeading }}</h3>
+              <div style="display:flex; flex-direction:column; gap:clamp(26px,3.4vw,42px);">
+                <sc-for list="{{ methodRows }}" as="mr" hint-placeholder-count="3">
+                  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:clamp(22px,3vw,40px); align-items:center;">
+                    <div style="border-radius:16px; overflow:hidden; border:1px solid #e6edf2; background:#fff;">
+                      {{ mr.imgEl }}
+                    </div>
+                    <div>
+                      <h4 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.25; letter-spacing:-.01em; margin:0 0 14px; color:#122a3a; white-space:pre-line;">{{ mr.title }}</h4>
+                      <div style="height:2px; background:#122a3a; width:100%; margin:0 0 16px;"></div>
+                      <p style="font-size:16px; line-height:1.72; color:#445d6e; margin:0; white-space:pre-line;">{{ mr.text }}</p>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </sc-if>
+        <sc-if value="{{ noAbout }}" hint-placeholder-val="{{ true }}">
+          <p style="font-size:16.5px; line-height:1.75; color:#445d6e; margin:0 0 16px;">{{ summary }} 詳細な内容は現在準備中です。最終ページでは、施術方法や適応対象、予想される結果、プラン全体での位置づけなどを、韓国での治療を検討する海外患者様向けに詳しくご説明します。</p>
+          <p style="font-size:16.5px; line-height:1.75; color:#445d6e; margin:0;">滞在中は、カウンセリング・手術・通訳・フォローアップケアまで、アリアコーポレーションがすべてを調整し、全行程をシンプルで透明なものに保ちます。</p>
+        </sc-if>
+        <sc-if value="{{ hasIdealFor }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:30px;">
+            <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.25; letter-spacing:-.01em; margin:0 0 16px; color:#122a3a; white-space:pre-line;">{{ idealForHeading }}</h3>
+            <div style="display:flex; flex-direction:column; gap:13px;">
+              <sc-for list="{{ idealForItems }}" as="it" hint-placeholder-count="4">
+                <div style="display:flex; gap:14px; align-items:flex-start;">
+                  <i data-lucide="circle-check" style="font-size:21px; color:#2e9fc0; flex:none; margin-top:1px;"></i>
+                  <p style="font-size:16px; line-height:1.6; color:#445d6e; margin:0; white-space:pre-line;">{{ it.text }}</p>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasTypeGallery }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:34px;">
+            <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.25; letter-spacing:-.01em; margin:0 0 20px; color:#122a3a;">鼻整形で効果が出やすい4つの鼻のタイプ</h3>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(155px,1fr)); gap:clamp(14px,2vw,22px);">
+              <sc-for list="{{ typeGalleryItems }}" as="ti" hint-placeholder-count="4">
+                <div style="display:flex; flex-direction:column;">
+                  <div style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(30px,3.2vw,40px); color:#cdd9e1; line-height:1; letter-spacing:-.02em; white-space:pre-line;">{{ ti.num }}</div>
+                  <div style="font-size:15.5px; font-weight:700; color:#122a3a; margin:9px 0 13px; white-space:pre-line;">{{ ti.label }}</div>
+                  {{ ti.imgEl }}
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasCartilageGallery }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:38px;">
+            <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.3; letter-spacing:-.01em; margin:0 0 22px; color:#122a3a;">インプラントを使わない鼻整形で使用される軟骨の種類</h3>
+            <div class="cartilage-grid">
+              <sc-for list="{{ cartilageItems }}" as="ca" hint-placeholder-count="4">
+                <div style="display:flex; flex-direction:column;">
+                  {{ ca.imgEl }}
+                  <p style="font-size:16px; font-weight:700; color:#122a3a; line-height:1.35; margin:15px 0 7px; white-space:pre-line;">{{ ca.label }}</p>
+                  <p style="font-size:14.5px; line-height:1.62; color:#5a7488; margin:0; white-space:pre-line;">{{ ca.desc }}</p>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasSeptumFigure }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:38px; background:#f7fbfd; border:1px solid #e1edf3; border-radius:20px; padding:clamp(22px,3vw,32px);">
+            <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.3; letter-spacing:-.01em; margin:0 0 14px; color:#122a3a; white-space:pre-line;">{{ septumHeading }}</h3>
+            <p style="font-size:16px; line-height:1.72; color:#445d6e; margin:0; white-space:pre-line;">{{ septumPara }}</p>
+            <div style="margin-top:26px; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:clamp(18px,2.5vw,30px);">
+              <sc-for list="{{ septumPanels }}" as="sp" hint-placeholder-count="2">
+                <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+                  <p style="font-size:16px; font-weight:700; color:#122a3a; line-height:1.35; margin:0; white-space:pre-line;">{{ sp.title }}</p>
+                  <p style="font-size:14px; color:#5a7488; line-height:1.45; margin:5px 0 16px; white-space:pre-line;">{{ sp.sub }}</p>
+                  {{ sp.imgEl }}
+                  <p style="font-size:14.5px; font-weight:600; color:#3f6075; margin:14px 0 0; white-space:pre-line;">{{ sp.caption }}</p>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasStabilityGraph }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:38px;">
+            <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(20px,2.3vw,25px); line-height:1.25; letter-spacing:-.01em; margin:0 0 12px; color:#122a3a; white-space:pre-line;">{{ stabilityHeading }}</h3>
+            <p style="font-size:16.5px; line-height:1.7; color:#445d6e; margin:0 0 22px; white-space:pre-line;">{{ stabilityIntro }}</p>
+            <div style="background:linear-gradient(180deg,#fcfbf8,#fbfdfe); border:1px solid #e7eef2; border-radius:20px; padding:clamp(14px,2.4vw,26px);">
+              <svg viewBox="0 0 1150 540" style="width:100%; height:auto; display:block; font-family:'Noto Sans JP',sans-serif;" role="img" aria-label="Tissue stability over time after rhinoplasty">
+                <defs>
+                  <linearGradient id="rvLine" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#3b82f6"></stop>
+                    <stop offset="1" stop-color="#4fd1c5"></stop>
+                  </linearGradient>
+                  <linearGradient id="rvArea" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#3b82f6" stop-opacity="0.18"></stop>
+                    <stop offset="1" stop-color="#3b82f6" stop-opacity="0"></stop>
+                  </linearGradient>
+                </defs>
+                <!-- recommended window highlight (6 months – 1 year) -->
+                <rect x="655" y="60" width="190" height="320" fill="#3b82f6" opacity="0.07"></rect>
+                <!-- area under curve -->
+                <path d="M100,360 C121.7,357.5 171.7,357 230,345 C288.3,333 379.2,311.3 450,288 C520.8,264.7 589.2,233 655,205 C720.8,177 785.5,142.2 845,120 L845,380 L100,380 Z" fill="url(#rvArea)"></path>
+                <!-- axis -->
+                <line x1="70" y1="380" x2="1012" y2="380" stroke="#c9d4db" stroke-width="2.5"></line>
+                <path d="M1012,380 L998,373 M1012,380 L998,387" stroke="#c9d4db" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
+                <!-- droplines -->
+                <line x1="230" y1="345" x2="230" y2="380" stroke="#9cc3f5" stroke-width="2"></line>
+                <line x1="450" y1="288" x2="450" y2="380" stroke="#9cc3f5" stroke-width="2"></line>
+                <line x1="655" y1="205" x2="655" y2="380" stroke="#6aa8f0" stroke-width="2.5"></line>
+                <line x1="845" y1="120" x2="845" y2="380" stroke="#6aa8f0" stroke-width="2.5"></line>
+                <!-- curve -->
+                <path d="M100,360 C121.7,357.5 171.7,357 230,345 C288.3,333 379.2,311.3 450,288 C520.8,264.7 589.2,233 655,205 C720.8,177 785.5,142.2 845,120 C904.5,97.8 984.2,80 1012,72" fill="none" stroke="url(#rvLine)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M1012,72 L995,71 M1012,72 L1004,87" stroke="#4fd1c5" stroke-width="5" fill="none" stroke-linecap="round"></path>
+                <!-- chevrons in window -->
+                <path d="M690,232 l34,20 l-34,20 M724,232 l34,20 l-34,20" fill="none" stroke="#3b82f6" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"></path>
+                <!-- points -->
+                <circle cx="100" cy="360" r="9" fill="#3b82f6"></circle>
+                <circle cx="230" cy="345" r="10" fill="#ffffff" stroke="#3b82f6" stroke-width="4"></circle>
+                <circle cx="450" cy="288" r="9" fill="#3b82f6"></circle>
+                <circle cx="655" cy="205" r="10" fill="#3b82f6"></circle>
+                <circle cx="845" cy="120" r="11" fill="#3b82f6"></circle>
+                <!-- warning callout -->
+                <path d="M905,70 l22,40 l-44,0 Z" fill="none" stroke="#122a3a" stroke-width="3.5" stroke-linejoin="round"></path>
+                <line x1="905" y1="84" x2="905" y2="96" stroke="#122a3a" stroke-width="3.5" stroke-linecap="round"></line>
+                <circle cx="905" cy="103" r="1.8" fill="#122a3a"></circle>
+                <text x="872" y="148" font-family="'Zen Kaku Gothic New',sans-serif" font-weight="700" font-size="25" fill="#122a3a">推奨される</text>
+                <text x="872" y="180" font-family="'Zen Kaku Gothic New',sans-serif" font-weight="700" font-size="25" fill="#122a3a">再手術の時期：</text>
+                <text x="872" y="212" font-size="23" fill="#445d6e">最低6カ月以降</text>
+                <!-- x labels -->
+                <text x="230" y="428" text-anchor="middle" font-family="'Zen Kaku Gothic New',sans-serif" font-weight="700" font-size="27" fill="#122a3a">1カ月後</text>
+                <text x="450" y="428" text-anchor="middle" font-family="'Zen Kaku Gothic New',sans-serif" font-weight="700" font-size="27" fill="#122a3a">3カ月後</text>
+                <text x="655" y="428" text-anchor="middle" font-family="'Zen Kaku Gothic New',sans-serif" font-weight="700" font-size="27" fill="#122a3a">6カ月後</text>
+                <text x="845" y="428" text-anchor="middle" font-family="'Zen Kaku Gothic New',sans-serif" font-weight="700" font-size="27" fill="#122a3a">1年後</text>
+                <text x="230" y="468" text-anchor="middle" font-size="22" fill="#5a7488">［組織の安定度］</text>
+                <text x="450" y="468" text-anchor="middle" font-size="22" fill="#5a7488">［組織の安定度］</text>
+                <text x="655" y="468" text-anchor="middle" font-size="22" fill="#5a7488">［組織の安定度］</text>
+                <text x="845" y="468" text-anchor="middle" font-size="22" fill="#5a7488">［組織の安定度］</text>
+              </svg>
+            </div>
+            <div style="margin-top:22px; display:flex; flex-direction:column; gap:13px;">
+              <sc-for list="{{ stabilityPoints }}" as="pt" hint-placeholder-count="4">
+                <div style="display:flex; gap:12px; align-items:flex-start;">
+                  <span style="flex:none; width:7px; height:7px; border-radius:50%; background:var(--accent); margin-top:9px;"></span>
+                  <p style="font-size:16px; line-height:1.65; color:#445d6e; margin:0; white-space:pre-line;">{{ pt.text }}</p>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasCompareFigure }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:32px; background:#f7fbfd; border:1px solid #e1edf3; border-radius:20px; padding:clamp(22px,3vw,32px);">
+            <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.2; letter-spacing:-.01em; margin:0 0 22px; color:#122a3a; white-space:pre-line;">{{ compareTitle }}</h3>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:clamp(18px,2.5vw,28px);">
+              <sc-for list="{{ compareItems }}" as="ci" hint-placeholder-count="3">
+                <div style="display:flex; flex-direction:column;">
+                  {{ ci.imgEl }}
+                  <p style="font-size:15.5px; font-weight:700; color:#122a3a; line-height:1.4; margin:16px 0 8px; white-space:pre-line;">{{ ci.lead }}</p>
+                  <p style="font-size:14.5px; line-height:1.6; color:#5a7488; margin:0; white-space:pre-line;">{{ ci.desc }}</p>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasRichFigures }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:32px; display:flex; flex-direction:column; gap:34px;">
+            <sc-for list="{{ richFigures }}" as="fig" hint-placeholder-count="1">
+              <div>
+                <sc-if value="{{ fig.heading }}" hint-placeholder-val="">
+                  <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.2; letter-spacing:-.01em; margin:0 0 10px; color:#122a3a; white-space:pre-line;">{{ fig.heading }}</h3>
+                </sc-if>
+                <sc-if value="{{ fig.intro }}" hint-placeholder-val="">
+                  <p style="font-size:16px; line-height:1.7; color:#445d6e; margin:0 0 18px; max-width:680px; white-space:pre-line;">{{ fig.intro }}</p>
+                </sc-if>
+                {{ fig.el }}
+                <sc-if value="{{ fig.captionLead }}" hint-placeholder-val="">
+                  <p style="font-size:15.5px; font-weight:700; color:#122a3a; line-height:1.4; margin:16px 0 6px; white-space:pre-line;">{{ fig.captionLead }}</p>
+                </sc-if>
+                <sc-if value="{{ fig.caption }}" hint-placeholder-val="">
+                  <p style="font-size:14.5px; line-height:1.6; color:#5a7488; margin:0; white-space:pre-line;">{{ fig.caption }}</p>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasVsTable }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:26px; border:1px solid #e1edf3; border-radius:18px; overflow:hidden;">
+            <div style="display:grid; grid-template-columns:1fr 130px 1fr; background:#0e2738;">
+              <div style="padding:14px 18px; text-align:center; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(14px,1.6vw,17px); color:#fff; white-space:pre-line;">{{ vsLeftTitle }}</div>
+              <div style="padding:14px 8px; text-align:center; font-weight:800; font-size:15px; color:#7fd2e8; align-self:center;">VS</div>
+              <div style="padding:14px 18px; text-align:center; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(14px,1.6vw,17px); color:#fff; white-space:pre-line;">{{ vsRightTitle }}</div>
+            </div>
+            <sc-for list="{{ vsRows }}" as="r" hint-placeholder-count="3">
+              <div style="display:grid; grid-template-columns:1fr 130px 1fr; border-top:1px solid #e1edf3;">
+                <div style="padding:16px 18px; font-size:14.5px; line-height:1.6; color:#445d6e; text-align:center; align-self:center; white-space:pre-line;">{{ r.left }}</div>
+                <div style="padding:16px 8px; font-size:12.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#2e9fc0; background:#f7fbfd; text-align:center; align-self:center; white-space:pre-line;">{{ r.label }}</div>
+                <div style="padding:16px 18px; font-size:14.5px; line-height:1.6; color:#445d6e; text-align:center; align-self:center; white-space:pre-line;">{{ r.right }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasFigureGroups }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:34px; display:flex; flex-direction:column; gap:36px;">
+            <sc-for list="{{ figureGroups }}" as="grp" hint-placeholder-count="1">
+              <div>
+                <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.2; letter-spacing:-.01em; margin:0 0 10px; color:#122a3a; white-space:pre-line;">{{ grp.heading }}</h3>
+                <sc-if value="{{ grp.intro }}" hint-placeholder-val="">
+                  <p style="font-size:16px; line-height:1.7; color:#445d6e; margin:0 0 20px; max-width:700px; white-space:pre-line;">{{ grp.intro }}</p>
+                </sc-if>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:clamp(18px,2.5vw,26px);">
+                  <sc-for list="{{ grp.panels }}" as="pn" hint-placeholder-count="2">
+                    <div style="display:flex; flex-direction:column;">
+                      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                        <span style="flex:none; width:26px; height:26px; border-radius:999px; background:var(--accent); color:#fff; font:700 13px/26px 'Noto Sans JP'; text-align:center; white-space:pre-line;">{{ pn.num }}</span>
+                        <span style="font-size:15px; font-weight:700; color:#122a3a; line-height:1.3; white-space:pre-line;">{{ pn.captionLead }}</span>
+                      </div>
+                      {{ pn.el }}
+                      <sc-if value="{{ pn.caption }}" hint-placeholder-val="">
+                        <p style="font-size:14px; line-height:1.6; color:#5a7488; margin:12px 0 0; white-space:pre-line;">{{ pn.caption }}</p>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </section>
+
+      <sc-if value="{{ hasStepGallery }}" hint-placeholder-val="{{ false }}">
+        <section style="margin-bottom:44px;">
+          <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.2; letter-spacing:-.01em; margin:0 0 16px;">{{ stepHeading }}</h2>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:30px;">
+            <sc-for list="{{ stepIntro }}" as="line" hint-placeholder-count="3">
+              <p style="font-size:16px; line-height:1.65; color:#445d6e; margin:0; white-space:pre-line;">{{ line.text }}</p>
+            </sc-for>
+          </div>
+          <div class="{{ stepGridClass }}">
+            <sc-for list="{{ stepItems }}" as="s" hint-placeholder-count="6">
+              <div style="display:flex; flex-direction:column;">
+                <div style="position:relative;">
+                  <sc-if value="{{ s.n }}" hint-placeholder-val=""><span style="position:absolute; top:10px; left:10px; z-index:2; display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; background:#122a3a; color:#fff; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:15px; border-radius:8px; white-space:pre-line;">{{ s.n }}</span></sc-if>
+                  {{ s.imgEl }}
+                </div>
+                <div style="margin-top:12px;">
+                  <sc-if value="{{ s.title }}" hint-placeholder-val="">
+                    <p style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:15.5px; line-height:1.3; color:#122a3a; margin:0 0 5px; white-space:pre-line;">{{ s.title }}</p>
+                  </sc-if>
+                  <p style="font-size:14.5px; line-height:1.55; color:#445d6e; margin:0; white-space:pre-line;">{{ s.caption }}</p>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ hasFaqs }}" hint-placeholder-val="{{ false }}">
+        <section style="margin-bottom:44px;">
+          <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.18; letter-spacing:-.01em; margin:0 0 20px;">よくあるご質問</h2>
+          <div style="display:flex; flex-direction:column; gap:18px;">
+            <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="3">
+              <div style="border:1px solid #e3eaef; border-radius:14px; padding:24px 26px; background:#f8fafb;">
+                <div style="display:flex; gap:14px; align-items:flex-start; margin-bottom:12px;">
+                  <span style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:18px; color:#2e9fc0; line-height:1.4; flex:none;">Q.</span>
+                  <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(17px,1.9vw,20px); line-height:1.4; letter-spacing:-.01em; margin:0; color:#122a3a; white-space:pre-line;">{{ f.q }}</h3>
+                </div>
+                <div style="display:flex; gap:14px; align-items:flex-start;">
+                  <span style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:18px; color:#9aabb6; line-height:1.65; flex:none;">A.</span>
+                  <p style="font-size:16px; line-height:1.7; color:#445d6e; margin:0; white-space:pre-line;">{{ f.a }}</p>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-if>
+
+      <!-- Surgical cases -->
+      <sc-if value="{{ hasCases }}" hint-placeholder-val="{{ false }}">
+      <section style="margin-bottom:48px;">
+        <div style="display:flex; flex-direction:column; gap:clamp(34px,4vw,52px);">
+          <sc-for list="{{ caseList }}" as="cs" hint-placeholder-count="2">
+            <div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin-bottom:26px;">
+                <span style="display:inline-flex; align-items:center; white-space:nowrap; padding:7px 22px; border-radius:999px; background:#6f86ab; color:#fff; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:600; font-size:13px; letter-spacing:.14em;">{{ cs.badge }}</span>
+                <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(20px,2.3vw,26px); line-height:1.2; letter-spacing:-.01em; margin:0; color:#122a3a; text-align:center; white-space:pre-line;">{{ cs.title }}</h3>
+              </div>
+              <div class="{{ cs.gridClass }}" style="align-items:start;">
+                <sc-for list="{{ cs.steps }}" as="st" hint-placeholder-count="3">
+                  <div style="display:flex; flex-direction:column;">
+                    <div style="border-radius:16px; overflow:hidden; border:1px solid #e6edf2; background:#fff; aspect-ratio:{{ cs.aspect }};">
+                      {{ st.imgEl }}
+                    </div>
+                    <p style="font-size:14.5px; line-height:1.6; color:#5a7488; margin:14px 0 0; text-align:center; white-space:pre-line;">{{ st.caption }}</p>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+      </sc-if>
+
+      <!-- Surgical techniques -->
+      <sc-if value="{{ hasTechniques }}" hint-placeholder-val="{{ false }}">
+      <section style="margin-bottom:44px;">
+        <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.18; letter-spacing:-.01em; margin:0 0 24px;">{{ techHeading }}</h2>
+        <div style="display:flex; flex-direction:column; gap:28px;">
+          <sc-for list="{{ techniques }}" as="t" hint-placeholder-count="2">
+            <div style="background:#f7fbfd; border:1px solid #e1edf3; border-radius:20px; padding:clamp(24px,3vw,34px);">
+              <sc-if value="{{ t.title }}" hint-placeholder-val="">
+                <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(19px,2.1vw,23px); line-height:1.2; letter-spacing:-.01em; margin:0 0 18px; color:#122a3a; white-space:pre-line;">{{ t.title }}</h3>
+              </sc-if>
+              <div style="display:flex; flex-direction:column; gap:16px;">
+                <sc-for list="{{ t.blocks }}" as="blk" hint-placeholder-count="3">
+                  <sc-if value="{{ blk.isPara }}" hint-placeholder-val="{{ false }}">
+                    <p style="font-size:16px; line-height:1.72; color:#445d6e; margin:0; white-space:pre-line;">{{ blk.text }}</p>
+                  </sc-if>
+                  <sc-if value="{{ blk.isSubhead }}" hint-placeholder-val="{{ false }}">
+                    <div style="font:700 12.5px/1 'Noto Sans JP'; letter-spacing:.1em; text-transform:uppercase; color:#2e9fc0; margin-top:6px; white-space:pre-line;">{{ blk.text }}</div>
+                  </sc-if>
+                  <sc-if value="{{ blk.isOlist }}" hint-placeholder-val="{{ false }}">
+                    <ol style="list-style:none; counter-reset:step; margin:0; padding:0; display:flex; flex-direction:column; gap:13px;">
+                      <sc-for list="{{ blk.items }}" as="it" hint-placeholder-count="4">
+                        <li style="position:relative; padding-left:42px;">
+                          <span style="position:absolute; left:0; top:-1px; width:28px; height:28px; border-radius:999px; background:var(--accent); color:#fff; font:700 13px/28px 'Noto Sans JP'; text-align:center; white-space:pre-line;">{{ it.num }}</span>
+                          <p style="font-size:15.5px; line-height:1.6; color:#33506a; margin:0; font-weight:500; white-space:pre-line;">{{ it.text }}</p>
+                          <sc-if value="{{ it.hasSub }}" hint-placeholder-val="{{ false }}">
+                            <ul style="list-style:none; margin:9px 0 0; padding:0; display:flex; flex-direction:column; gap:7px;">
+                              <sc-for list="{{ it.sub }}" as="su" hint-placeholder-count="2">
+                                <li style="position:relative; padding-left:16px; font-size:14.5px; line-height:1.55; color:#5a7488;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:#9fc7d6;"></span>{{ su.text }}</li>
+                              </sc-for>
+                            </ul>
+                          </sc-if>
+                        </li>
+                      </sc-for>
+                    </ol>
+                  </sc-if>
+                  <sc-if value="{{ blk.isUlist }}" hint-placeholder-val="{{ false }}">
+                    <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:11px;">
+                      <sc-for list="{{ blk.items }}" as="it" hint-placeholder-count="4">
+                        <li>
+                          <div style="display:flex; gap:11px; align-items:flex-start;">
+                            <i data-lucide="check" style="font-size:18px; color:#2e9fc0; flex:none; margin-top:2px;"></i>
+                            <p style="font-size:15.5px; line-height:1.6; color:#445d6e; margin:0; white-space:pre-line;">{{ it.text }}</p>
+                          </div>
+                          <sc-if value="{{ it.hasSub }}" hint-placeholder-val="{{ false }}">
+                            <ul style="list-style:none; margin:8px 0 0 29px; padding:0; display:flex; flex-direction:column; gap:7px;">
+                              <sc-for list="{{ it.sub }}" as="su" hint-placeholder-count="2">
+                                <li style="position:relative; padding-left:16px; font-size:14.5px; line-height:1.55; color:#5a7488;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:#9fc7d6;"></span>{{ su.text }}</li>
+                              </sc-for>
+                            </ul>
+                          </sc-if>
+                        </li>
+                      </sc-for>
+                    </ul>
+                  </sc-if>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+      </sc-if>
+
+      <sc-if value="{{ hasFigureNote }}" hint-placeholder-val="{{ false }}">
+      <section style="margin-bottom:44px;">
+        <sc-if value="{{ fnHeading }}" hint-placeholder-val=""><h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.2; letter-spacing:-.01em; margin:0 0 18px;">{{ fnHeading }}</h2></sc-if>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:clamp(24px,3.4vw,44px); align-items:center;">
+          <div style="border-radius:18px; overflow:hidden; border:1px solid #ecf0f2; background:#0c0c0c;">
+            {{ fnImgEl }}
+          </div>
+          <div style="display:flex; flex-direction:column; gap:22px;">
+            <sc-for list="{{ fnIntro }}" as="line" hint-placeholder-count="1">
+              <p style="font-size:16.5px; line-height:1.72; color:#445d6e; margin:0; white-space:pre-line;">{{ line.text }}</p>
+            </sc-for>
+            <sc-if value="{{ hasFnExtra }}" hint-placeholder-val="{{ false }}">
+              <div style="border-top:1px solid #e7edf0; padding-top:20px;">
+                <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(17px,1.9vw,20px); line-height:1.25; letter-spacing:-.01em; margin:0 0 10px; color:#122a3a; white-space:pre-line;">{{ fnExtraHeading }}</h3>
+                <p style="font-size:16px; line-height:1.7; color:#5a7488; margin:0; white-space:pre-line;">{{ fnExtraText }}</p>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </section>
+      </sc-if>
+
+      <sc-if value="{{ hasDualFeature }}" hint-placeholder-val="{{ false }}">
+      <section style="margin-bottom:44px;">
+        <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.2; letter-spacing:-.01em; margin:0 0 14px;">{{ dfHeading }}</h2>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:30px;">
+          <sc-for list="{{ dfIntro }}" as="line" hint-placeholder-count="2">
+            <p style="font-size:16px; line-height:1.7; color:#445d6e; margin:0; max-width:880px; white-space:pre-line;">{{ line.text }}</p>
+          </sc-for>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(22px,3vw,36px);">
+          <sc-for list="{{ dfItems }}" as="it" hint-placeholder-count="2">
+            <div style="display:flex; flex-direction:column;">
+              {{ it.imgEl }}
+              <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(17px,1.9vw,20px); line-height:1.25; letter-spacing:-.01em; margin:18px 0 10px; color:#122a3a; white-space:pre-line;">{{ it.title }}</h3>
+              <p style="font-size:15px; line-height:1.65; color:#5a7488; margin:0; white-space:pre-line;">{{ it.desc }}</p>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+      </sc-if>
+
+      <sc-if value="{{ hasSplitCompare }}" hint-placeholder-val="{{ false }}">
+      <section style="margin-bottom:44px;">
+        <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.18; letter-spacing:-.01em; margin:0 0 12px;">{{ scHeading }}</h2>
+        <p style="font-size:16px; line-height:1.65; color:#445d6e; margin:0 0 26px; max-width:720px; white-space:pre-line;">{{ scIntro }}</p>
+        <div style="border:1px solid #e1edf3; border-radius:20px; overflow:hidden;">
+
+          <div style="display:grid; grid-template-columns:minmax(0,1fr) clamp(96px,11vw,132px) minmax(0,1fr); align-items:center; background:#f1f8fb; border-bottom:1px solid #e1edf3;">
+            <div style="text-align:center; padding:15px 12px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(14px,1.6vw,18px); line-height:1.2; color:#122a3a; white-space:pre-line;">{{ scLeftTitle }}</div>
+            <div style="text-align:center; padding:15px 4px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:800; font-size:clamp(15px,1.8vw,19px); color:#2e9fc0; letter-spacing:.02em;">VS</div>
+            <div style="text-align:center; padding:15px 12px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(14px,1.6vw,18px); line-height:1.2; color:#122a3a; white-space:pre-line;">{{ scRightTitle }}</div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:minmax(0,1fr) clamp(96px,11vw,132px) minmax(0,1fr); border-bottom:1px solid #e1edf3;">
+            <div style="padding:clamp(14px,2vw,22px); display:flex; flex-direction:column; align-items:center;">{{ scImgMiniIncision }}<p style="font-size:13.5px; line-height:1.5; color:#445d6e; text-align:center; margin:13px 0 0; white-space:pre-line;">{{ scIncisionLeft }}</p></div>
+            <div style="display:flex; align-items:center; justify-content:center; text-align:center; padding:10px 6px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(12.5px,1.4vw,15px); line-height:1.25; color:#33506a; background:#fafdfe; border-left:1px solid #eef3f6; border-right:1px solid #eef3f6;">切開部位</div>
+            <div style="padding:clamp(14px,2vw,22px); display:flex; flex-direction:column; align-items:center;">{{ scImgFullIncision }}<p style="font-size:13.5px; line-height:1.5; color:#445d6e; text-align:center; margin:13px 0 0; white-space:pre-line;">{{ scIncisionRight }}</p></div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:minmax(0,1fr) clamp(96px,11vw,132px) minmax(0,1fr); border-bottom:1px solid #e1edf3;">
+            <div style="padding:clamp(14px,2vw,22px); display:flex; flex-direction:column; align-items:center;">{{ scImgMiniDissection }}<div style="display:flex; flex-wrap:wrap; gap:14px; justify-content:center; margin-top:13px;"><span style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:#5a7488;"><span style="width:13px; height:13px; border-radius:3px; background:#67b48a; flex:none;"></span>皮膚剥離範囲</span><span style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:#5a7488;"><span style="width:13px; height:13px; border-radius:3px; background:#eaa238; flex:none;"></span>SMAS層剥離範囲</span></div></div>
+            <div style="display:flex; align-items:center; justify-content:center; text-align:center; padding:10px 6px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(12.5px,1.4vw,15px); line-height:1.25; color:#33506a; background:#fafdfe; border-left:1px solid #eef3f6; border-right:1px solid #eef3f6;">剥離範囲</div>
+            <div style="padding:clamp(14px,2vw,22px); display:flex; flex-direction:column; align-items:center;">{{ scImgFullDissection }}<div style="display:flex; flex-wrap:wrap; gap:14px; justify-content:center; margin-top:13px;"><span style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:#5a7488;"><span style="width:13px; height:13px; border-radius:3px; background:#67b48a; flex:none;"></span>皮膚剥離範囲</span><span style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:#5a7488;"><span style="width:13px; height:13px; border-radius:3px; background:#eaa238; flex:none;"></span>SMAS層剥離範囲</span></div></div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:minmax(0,1fr) clamp(96px,11vw,132px) minmax(0,1fr); border-bottom:1px solid #e1edf3;">
+            <div style="padding:18px 16px; text-align:center; font-size:15px; line-height:1.55; color:#445d6e; align-self:center; white-space:pre-line;">{{ scAgeLeft }}</div>
+            <div style="display:flex; align-items:center; justify-content:center; text-align:center; padding:12px 6px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(12.5px,1.4vw,15px); line-height:1.25; color:#33506a; background:#fafdfe; border-left:1px solid #eef3f6; border-right:1px solid #eef3f6;">対象年齢</div>
+            <div style="padding:18px 16px; text-align:center; font-size:15px; line-height:1.55; color:#445d6e; align-self:center; white-space:pre-line;">{{ scAgeRight }}</div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:minmax(0,1fr) clamp(96px,11vw,132px) minmax(0,1fr); border-bottom:1px solid #e1edf3;">
+            <div style="padding:18px 16px; text-align:center; font-size:14.5px; line-height:1.6; color:#445d6e; align-self:center; white-space:pre-line;">{{ scLiftLeft }}</div>
+            <div style="display:flex; align-items:center; justify-content:center; text-align:center; padding:12px 6px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(12.5px,1.4vw,15px); line-height:1.25; color:#33506a; background:#fafdfe; border-left:1px solid #eef3f6; border-right:1px solid #eef3f6;">引き上げ効果</div>
+            <div style="padding:18px 16px; text-align:center; font-size:14.5px; line-height:1.6; color:#445d6e; align-self:center; white-space:pre-line;">{{ scLiftRight }}</div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:minmax(0,1fr) clamp(96px,11vw,132px) minmax(0,1fr);">
+            <div style="padding:18px 16px; text-align:center; font-size:14.5px; line-height:1.6; color:#445d6e; align-self:center; white-space:pre-line;">{{ scCandLeft }}</div>
+            <div style="display:flex; align-items:center; justify-content:center; text-align:center; padding:12px 6px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(12.5px,1.4vw,15px); line-height:1.25; color:#33506a; background:#fafdfe; border-left:1px solid #eef3f6; border-right:1px solid #eef3f6;">適応対象</div>
+            <div style="padding:18px 16px; text-align:center; font-size:14.5px; line-height:1.6; color:#445d6e; align-self:center; white-space:pre-line;">{{ scCandRight }}</div>
+          </div>
+
+        </div>
+      </section>
+      </sc-if>
+
+      <sc-if value="{{ hasSurgMethods }}" hint-placeholder-val="{{ false }}">
+      <section style="margin-bottom:44px;">
+        <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.2; letter-spacing:-.01em; margin:0 0 26px;">{{ smHeading }}</h2>
+        <div style="display:flex; flex-direction:column; gap:clamp(30px,4vw,48px);">
+          <sc-for list="{{ smItems }}" as="m" hint-placeholder-count="3">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(24px,3vw,42px); align-items:start;">
+              <div style="border-radius:18px; overflow:hidden; border:1px solid #e6edf2; background:#fff; white-space:pre-line;">{{ m.imgEl }}</div>
+              <div>
+                <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(19px,2.1vw,23px); line-height:1.25; letter-spacing:-.01em; margin:0 0 14px; color:#122a3a; white-space:pre-line;">{{ m.title }}</h3>
+                <div style="height:2px; background:#122a3a; width:100%; margin:0 0 18px;"></div>
+                <sc-for list="{{ m.paras }}" as="para" hint-placeholder-count="0">
+                  <p style="font-size:16px; line-height:1.72; color:#445d6e; margin:0 0 14px; white-space:pre-line;">{{ para.text }}</p>
+                </sc-for>
+                <sc-for list="{{ m.groups }}" as="g" hint-placeholder-count="1">
+                  <div style="margin-top:18px;">
+                    <div style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:14px; letter-spacing:.02em; text-transform:uppercase; color:{{ g.color }}; margin:0 0 12px; white-space:pre-line;">{{ g.label }}</div>
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+                      <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+                        <div style="display:flex; gap:11px; align-items:flex-start;">
+                          <i data-lucide="{{ g.iconName }}" style="font-size:20px; color:{{ g.iconColor }}; flex:none; margin-top:1px;"></i>
+                          <p style="font-size:15.5px; line-height:1.6; color:#445d6e; margin:0; white-space:pre-line;">{{ it.text }}</p>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+      </sc-if>
+
+      <section style="margin-bottom:44px;">
+        <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.18; letter-spacing:-.01em; margin:0 0 16px;">メリット</h2>
+        <sc-if value="{{ hasBenefits }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; flex-direction:column; gap:30px;">
+            <sc-for list="{{ benefitGroups }}" as="g" hint-placeholder-count="2">
+              <div>
+                <sc-if value="{{ g.title }}" hint-placeholder-val="{{ true }}">
+                <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(17px,1.9vw,20px); line-height:1.25; margin:0 0 14px; white-space:pre-line;">{{ g.title }}</h3>
+                </sc-if>
+                <div style="display:flex; flex-direction:column; gap:14px;">
+                  <sc-for list="{{ g.items }}" as="b" hint-placeholder-count="3">
+                    <div style="display:flex; gap:14px; align-items:flex-start;">
+                      <i data-lucide="circle-check" style="font-size:22px; color:#2e9fc0; flex:none; margin-top:1px;"></i>
+                      <p style="font-size:16px; line-height:1.65; color:#445d6e; margin:0; white-space:pre-line;">{{ b.text }}</p>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noBenefits }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div style="display:flex; gap:14px; align-items:flex-start;">
+              <i data-lucide="circle-check" style="font-size:22px; color:#2e9fc0; flex:none; margin-top:1px;"></i>
+              <p style="font-size:16px; line-height:1.65; color:#445d6e; margin:0;">写真での診断を含む詳細なカウンセリングと、誠実なご提案。 <span style="color:#9aabb6;">（仮）</span></p>
+            </div>
+            <div style="display:flex; gap:14px; align-items:flex-start;">
+              <i data-lucide="circle-check" style="font-size:22px; color:#2e9fc0; flex:none; margin-top:1px;"></i>
+              <p style="font-size:16px; line-height:1.65; color:#445d6e; margin:0;">ご契約前の、隠れた費用のない明瞭なお見積もり。 <span style="color:#9aabb6;">（仮）</span></p>
+            </div>
+            <div style="display:flex; gap:14px; align-items:flex-start;">
+              <i data-lucide="circle-check" style="font-size:22px; color:#2e9fc0; flex:none; margin-top:1px;"></i>
+              <p style="font-size:16px; line-height:1.65; color:#445d6e; margin:0;">回復に合わせた通訳・送迎・術後ケアの手配。 <span style="color:#9aabb6;">（仮）</span></p>
+            </div>
+          </div>
+        </sc-if>
+      </section>
+
+      <!-- Related procedures -->
+      <sc-if value="{{ hasSiblings }}" hint-placeholder-val="{{ true }}">
+      <section>
+        <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(20px,2.2vw,24px); line-height:1.2; letter-spacing:-.01em; margin:0 0 18px;">関連施術</h2>
+        <div style="display:flex; flex-wrap:wrap; gap:11px;">
+          <sc-for list="{{ siblings }}" as="s" hint-placeholder-count="4">
+            <a href="procedure.dc.html?proc={{ s.slug }}" class="sib">{{ s.name }} <i data-lucide="arrow-right" style="font-size:15px;"></i></a>
+          </sc-for>
+        </div>
+      </section>
+      </sc-if>
+    </article>
+
+    <!-- Sidebar: quick facts -->
+    <aside style="position:sticky; top:96px; background:#fff; border:1px solid #e1edf3; border-radius:22px; padding:26px 26px 24px; box-shadow:0 1px 2px rgba(16,41,61,.04);">
+      <div style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:18px; margin:0 0 18px;">基本情報</div>
+      <div style="display:flex; flex-direction:column; gap:0;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:14px; padding:13px 0; border-bottom:1px solid #eef4f7;">
+          <span style="display:inline-flex; align-items:center; gap:9px; font-size:14px; color:#5a7488; font-weight:500;"><i data-lucide="clock" style="font-size:17px; color:#2e9fc0;"></i> 施術時間</span>
+          <span style="font-size:14px; font-weight:600; color:#122a3a; text-align:right; white-space:pre-line;">{{ factDuration }}</span>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:14px; padding:13px 0; border-bottom:1px solid #eef4f7;">
+          <span style="display:inline-flex; align-items:center; gap:9px; font-size:14px; color:#5a7488; font-weight:500;"><i data-lucide="moon" style="font-size:17px; color:#2e9fc0;"></i> 麻酙</span>
+          <span style="font-size:14px; font-weight:600; color:#122a3a; text-align:right; white-space:pre-line;">{{ factAnesthesia }}</span>
+        </div>
+        <div style="padding:13px 0; border-bottom:1px solid #eef4f7;">
+          <span style="display:inline-flex; align-items:center; gap:9px; font-size:14px; color:#5a7488; font-weight:500; margin-bottom:10px;"><i data-lucide="calendar" style="font-size:17px; color:#2e9fc0;"></i> 韓国滞在に必要な日数</span>
+          <sc-if value="{{ hasStaySchedule }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex; flex-direction:column; gap:7px; margin-top:4px;">
+              <sc-for list="{{ stayRows }}" as="s" hint-placeholder-count="3">
+                <div style="display:flex; align-items:baseline; gap:10px;">
+                  <span style="flex:none; min-width:46px; font-size:12px; font-weight:700; color:var(--accent); letter-spacing:.02em; white-space:pre-line;">{{ s.day }}</span>
+                  <span style="font-size:13.5px; font-weight:600; color:#122a3a; white-space:pre-line;">{{ s.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ hasStayNote }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:11px; font-size:12px; line-height:1.55; color:#5a7488; font-style:italic;">* {{ stayNote }}</div>
+          </sc-if>
+        </div>
+        <div style="padding:13px 0;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:14px;">
+            <span style="display:inline-flex; align-items:center; gap:9px; font-size:14px; color:#5a7488; font-weight:500;"><i data-lucide="banknote" style="font-size:17px; color:#2e9fc0;"></i> 価格帯</span>
+            <span style="font-size:14px; font-weight:700; color:#122a3a; text-align:right; white-space:pre-line;">{{ factPrice }}</span>
+          </div>
+          <sc-if value="{{ factPriceNote }}" hint-placeholder-val="">
+            <div style="margin-top:6px; text-align:right; font-size:12px; color:#9aabb6; font-style:italic; white-space:pre-line;">{{ factPriceNote }}</div>
+          </sc-if>
+        </div>
+      </div>
+      <sc-if value="{{ noFacts }}" hint-placeholder-val="{{ true }}">
+        <div style="font:600 10.5px/1.5 ui-monospace,Menlo,monospace; letter-spacing:.1em; color:#b6c4cd; text-transform:uppercase; margin-top:16px; text-align:center;">詳細は確認中です</div>
+      </sc-if>
+      <a href="https://lin.ee/3KJTZXJ" style="display:flex; align-items:center; justify-content:center; gap:9px; margin-top:18px; background:var(--accent); color:#fff; font-weight:700; font-size:15px; padding:14px 20px; border-radius:12px;">
+        <i data-lucide="message-circle" style="font-size:18px;"></i> 見積もりを取る
+      </a>
+    </aside>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background:#0e2738; color:#fff; padding:40px clamp(20px,5vw,72px);">
+    <div style="max-width:1320px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:18px;">
+      <a href="surgery-category.dc.html?cat={{ catSlug }}" style="display:flex; align-items:center; gap:8px; font-size:13.5px; color:rgba(255,255,255,.7); font-weight:600;">
+        <i data-lucide="arrow-left" style="font-size:16px;"></i> {{ catName }}に戻る
+      </a>
+      <div style="font-size:13px; color:rgba(255,255,255,.5);">© 2026 Ariacorporation · ariakorea.com</div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 1320, &quot;height&quot;: 900 }
+}">
+class Component extends DCLogic {
+  state = { proc: null, cat: null, cats: [], ready: false, surgOpen: false, langOpen: false };
+  componentDidMount(){
+    const slug = new URLSearchParams(window.location.search).get('proc') || '';
+    import('./surgery-data.js')
+      .then((m) => {
+        const found = m.getProcedure(slug);
+        this.setState({
+          proc: found ? found.procedure : null,
+          cat: found ? found.category : null,
+          cats: m.SURGERY_CATEGORIES,
+          ready: true,
+        });
+      })
+      .catch(() => this.setState({ ready: true }));
+    this._onDocClick = (e) => { if (this.state.langOpen && !(e.target.closest && e.target.closest('.nav-lang'))) this.setState({ langOpen: false }); };
+    document.addEventListener('click', this._onDocClick);
+    this._icons();
+  }
+  componentWillUnmount(){ document.removeEventListener('click', this._onDocClick); }
+  componentDidUpdate(){ this._icons(); }
+  _icons(){ try { if (window.lucide) window.lucide.createIcons(); } catch (e) {} }
+  _openSurg(){ clearTimeout(this._surgTimer); this.setState({ surgOpen: true }); }
+  figEl(spec){
+    const labels = (spec.labels || []).map((lb, i) => React.createElement('span', {
+      key: i,
+      style: {
+        position: 'absolute', left: lb.x, top: lb.y, transform: 'translate(-50%,-50%)',
+        background: lb.blue ? '#e9f1fb' : '#ffffff', color: lb.blue ? '#1f5fc0' : '#23303a',
+        fontSize: 'clamp(8.5px,1.02vw,12.5px)', fontWeight: 700, lineHeight: 1.18,
+        padding: '3px 8px', borderRadius: '999px', boxShadow: '0 1px 5px rgba(16,41,61,.22)',
+        textAlign: 'center', maxWidth: lb.w || '120px', whiteSpace: lb.nowrap ? 'nowrap' : 'normal',
+        pointerEvents: 'none',
+      },
+    }, lb.text));
+    const img = React.createElement('img', { src: spec.img, alt: spec.alt || '', style: { width: '100%', display: 'block', borderRadius: '16px' } });
+    return React.createElement('div', { style: { position: 'relative', maxWidth: (spec.maxW || 920) + 'px', margin: '0 auto' } }, img, ...labels);
+  }
+  _closeSurg(){ clearTimeout(this._surgTimer); this._surgTimer = setTimeout(() => this.setState({ surgOpen: false }), 1000); }
+  scImg(src, alt){
+    if (!src) return null;
+    return React.createElement('img', { src: src, alt: alt, style: { width: '100%', display: 'block', borderRadius: '12px', border: '1px solid #e6edf1' } });
+  }
+  renderVals(){
+    const p = this.state.proc;
+    const c = this.state.cat;
+    const nav = {
+      cats: this.state.cats,
+      surgClass: this.state.surgOpen ? 'open' : '',
+      onSurgEnter: () => this._openSurg(),
+      onSurgLeave: () => this._closeSurg(),
+      langClass: this.state.langOpen ? 'open' : '',
+      onLangToggle: (e) => { e.preventDefault(); e.stopPropagation(); this.setState((s) => ({ langOpen: !s.langOpen })); },
+    };
+    if (!p || !c) {
+      return Object.assign(nav, {
+        name: this.state.ready ? 'Procedure' : '',
+        summary: 'This procedure page is reserved — content and design coming soon.',
+        catName: '施術一覧',
+        catSlug: '',
+        heroLabel: '施術イメージ',
+        heroImg: '',
+        hasHeroImg: false,
+        noHeroImg: true,
+        heroImgEl: null,
+      diagramLabel: '施術図解',
+      aboutParas: [], hasAbout: false, noAbout: true, aboutGroups: [],
+      hasAboutFigure: false, aboutFigEl: null, afLegend: [], afCaption: '', hasAfMeta: false,
+      hasAfSide: false, noAfSide: true, afSideParas: [],
+      hasMethods: false, methodsHeading: '', methodRows: [],
+      hasCompareFigure: false, compareTitle: '', compareItems: [],
+      hasRichFigures: false, richFigures: [],
+      hasFigureGroups: false, figureGroups: [],
+      hasVsTable: false, vsLeftTitle: '', vsRightTitle: '', vsRows: [],
+      techniques: [], hasTechniques: false, techHeading: '手術方法',
+      hasCases: false, caseList: [],
+      benefitList: [], benefitGroups: [], hasBenefits: false, noBenefits: true,
+      faqs: [], hasFaqs: false,
+      hasStepGallery: false, stepHeading: '', stepIntro: [], stepItems: [],
+      hasSplitCompare: false,
+      hasSurgMethods: false, smHeading: '', smItems: [],
+      hasDualFeature: false, dfHeading: '', dfIntro: [], dfItems: [],
+      hasFigureNote: false, fnHeading: '', fnImg: '', fnIntro: [], hasFnExtra: false, fnExtraHeading: '', fnExtraText: '',
+      hasIdealFor: false, idealForHeading: 'こんな方におすすめ', idealForItems: [],
+      factDuration: '要確認', factAnesthesia: '要確認', factPrice: '要確認', factPriceNote: '',
+      stayRows: [], hasStaySchedule: false, factStay: '要確認', stayNote: '', hasStayNote: false,
+      hasFacts: false,
+      noFacts: true,
+      siblings: [],
+        hasSiblings: false,
+      });
+    }
+    const siblings = c.procedures.filter((x) => x.slug !== p.slug).slice(0, 6);
+    return Object.assign(nav, {
+      name: p.name,
+      summary: p.summary,
+      catName: c.name,
+      catSlug: c.slug,
+      heroLabel: p.name + ' — illustration',
+      heroImg: p.heroImg || '',
+      hasHeroImg: !!p.heroImg,
+      noHeroImg: !p.heroImg,
+      heroImgEl: p.heroImg ? React.createElement('img', { src: p.heroImg, alt: p.name + ' — illustration', style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' } }) : null,
+      diagramLabel: p.name + ' — before / after',
+      aboutParas: (p.about || []).map((t) => ({ text: t })),
+      hasAbout: !!((p.about && p.about.length) || (p.aboutSections && p.aboutSections.length)),
+      noAbout: !((p.about && p.about.length) || (p.aboutSections && p.aboutSections.length)),
+      aboutGroups: (p.aboutSections || []).map((s) => ({
+        heading: s.heading,
+        paras: (s.paras || []).map((t) => ({ text: t })),
+        hasImages: !!(s.images && s.images.length),
+        images: (s.images || []).map((im) => ({ el: React.createElement('img', { src: im.img, alt: im.alt || '', style: { width: '100%', display: 'block', borderRadius: '16px', border: '1px solid #e6edf2' } }) })),
+      })),
+      hasAboutFigure: !!(p.aboutFigure && p.aboutFigure.img),
+      aboutFigEl: (p.aboutFigure && p.aboutFigure.img) ? React.createElement('img', { src: p.aboutFigure.img, alt: (p.name || '') + ' anatomy', style: { width: '100%', display: 'block' } }) : null,
+      afLegend: ((p.aboutFigure && p.aboutFigure.legend) || []).map((l) => ({ color: l.color, label: l.label })),
+      afCaption: (p.aboutFigure && p.aboutFigure.caption) || '',
+      hasAfMeta: !!(p.aboutFigure && ((p.aboutFigure.legend && p.aboutFigure.legend.length) || p.aboutFigure.caption)),
+      hasAfSide: !!(p.aboutFigure && p.aboutFigure.sideParas && p.aboutFigure.sideParas.length),
+      noAfSide: !(p.aboutFigure && p.aboutFigure.sideParas && p.aboutFigure.sideParas.length),
+      afSideParas: ((p.aboutFigure && p.aboutFigure.sideParas) || []).map((t) => ({ text: t })),
+      hasMethods: !!(p.methods && p.methods.rows && p.methods.rows.length),
+      methodsHeading: (p.methods && p.methods.heading) || '',
+      methodRows: ((p.methods && p.methods.rows) || []).map((r) => ({
+        title: r.title || '', text: r.text || '',
+        imgEl: r.img ? React.createElement('img', { src: r.img, alt: r.title || 'Method', style: { width: '100%', display: 'block' } }) : null,
+      })),
+      hasCompareFigure: !!(p.compareFigure && p.compareFigure.items && p.compareFigure.items.length),
+      hasCartilageGallery: !!(p.cartilageGallery && p.cartilageGallery.items && p.cartilageGallery.items.length),
+      hasSeptumFigure: !!(p.septumFigure),
+      septumHeading: (p.septumFigure && p.septumFigure.heading) || '',
+      hasStabilityGraph: !!(p.stabilityGraph),
+      stabilityHeading: (p.stabilityGraph && p.stabilityGraph.heading) || '',
+      stabilityIntro: (p.stabilityGraph && p.stabilityGraph.intro) || '',
+      stabilityPoints: ((p.stabilityGraph && p.stabilityGraph.points) || []).map((t) => ({ text: t })),
+      septumPara: (p.septumFigure && p.septumFigure.para) || '',
+      septumPanels: ((p.septumFigure && p.septumFigure.panels) || []).map((pn) => ({
+        title: pn.title, sub: pn.sub, caption: pn.caption,
+        imgEl: React.createElement('img', { src: pn.img, alt: pn.title, style: { width: '100%', maxWidth: '300px', display: 'block', margin: '0 auto' } }),
+      })),
+      cartilageItems: ((p.cartilageGallery && p.cartilageGallery.items) || []).map((it) => ({
+        label: it.label,
+        desc: it.desc,
+        imgEl: React.createElement('img', { src: it.img, alt: it.label, style: { width: '100%', aspectRatio: '824 / 902', objectFit: 'cover', borderRadius: '12px', display: 'block' } }),
+      })),
+      hasTypeGallery: !!(p.typeGallery && p.typeGallery.items && p.typeGallery.items.length),
+      typeGalleryItems: ((p.typeGallery && p.typeGallery.items) || []).map((it, i) => ({
+        num: ('0' + (i + 1)).slice(-2),
+        label: it.label,
+        imgEl: React.createElement('img', { src: it.img, alt: it.label, style: { width: '100%', aspectRatio: '81 / 88', objectFit: 'cover', borderRadius: '12px', display: 'block' } }),
+      })),
+      compareTitle: (p.compareFigure && p.compareFigure.title) || '',
+      compareItems: ((p.compareFigure && p.compareFigure.items) || []).map((ci) => ({
+        lead: ci.lead,
+        desc: ci.desc,
+        imgEl: React.createElement('img', { src: ci.img, alt: ci.lead, style: { width: '100%', aspectRatio: '1 / 1', objectFit: 'cover', borderRadius: '14px', display: 'block' } }),
+      })),
+      hasRichFigures: !!(p.richFigures && p.richFigures.length),
+      richFigures: (p.richFigures || []).map((s) => ({
+        heading: s.heading || '', intro: s.intro || '', captionLead: s.captionLead || '', caption: s.caption || '',
+        el: this.figEl(s),
+      })),
+      hasVsTable: !!(p.vsTable && p.vsTable.rows && p.vsTable.rows.length),
+      vsLeftTitle: (p.vsTable && p.vsTable.leftTitle) || '',
+      vsRightTitle: (p.vsTable && p.vsTable.rightTitle) || '',
+      vsRows: (p.vsTable && p.vsTable.rows) || [],
+      hasFigureGroups: !!(p.figureGroups && p.figureGroups.length),
+      figureGroups: (p.figureGroups || []).map((g) => ({
+        heading: g.heading || '', intro: g.intro || '',
+        panels: (g.panels || []).map((pn, i) => ({
+          num: i + 1, captionLead: pn.captionLead || '', caption: pn.caption || '',
+          el: this.figEl(pn),
+        })),
+      })),
+      techniques: (p.techniques || []).map((tch) => ({
+        title: tch.title,
+        blocks: (tch.blocks || []).map((b) => ({
+          isPara: b.type === 'para',
+          isSubhead: b.type === 'subhead',
+          isOlist: b.type === 'olist',
+          isUlist: b.type === 'ulist',
+          text: b.text || '',
+          items: (b.items || []).map((it, i) => ({
+            num: i + 1,
+            text: it.text,
+            sub: (it.sub || []).map((s) => ({ text: s.text })),
+            hasSub: !!(it.sub && it.sub.length),
+          })),
+        })),
+      })),
+      hasTechniques: !!(p.techniques && p.techniques.length),
+      hasCases: !!(p.cases && p.cases.length),
+      caseList: (p.cases || []).map((cs) => ({
+        badge: cs.badge || '', title: cs.title || '', aspect: cs.aspect || '4 / 3',
+        gridClass: 'step-grid-' + (((cs.steps || []).length === 2 || (cs.steps || []).length === 4) ? (cs.steps || []).length : 3),
+        steps: (cs.steps || []).map((st) => ({
+          caption: st.caption || '',
+          imgEl: st.img ? React.createElement('img', { src: st.img, alt: cs.title || 'Case', style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' } }) : null,
+        })),
+      })),
+      techHeading: p.techHeading || '手術方法',
+      benefitList: (p.benefits || []).map((t) => ({ text: t })),
+      benefitGroups: (p.benefitGroups || []).map((g) => ({ title: g.title, items: (g.items || []).map((t) => ({ text: t })) })),
+      faqs: (p.faq || []).map((f) => ({ q: f.q, a: f.a })),
+      hasFaqs: !!(p.faq && p.faq.length),
+      hasStepGallery: !!(p.stepGallery && p.stepGallery.steps && p.stepGallery.steps.length),
+      stepHeading: (p.stepGallery && p.stepGallery.heading) || '',
+      stepIntro: ((p.stepGallery && p.stepGallery.intro) || []).map((t) => ({ text: t })),
+      stepItems: ((p.stepGallery && p.stepGallery.steps) || []).map((s) => ({ n: s.n, title: s.title || '', caption: s.caption || '', imgEl: React.createElement('img', { src: s.img, alt: 'Step ' + s.n, style: { width: '100%', aspectRatio: (p.stepGallery && p.stepGallery.aspect) || '1 / 1', objectFit: 'cover', display: 'block', borderRadius: '12px' } }) })),
+      stepGridClass: ('step-grid-' + (((p.stepGallery && p.stepGallery.cols) === 2 || (p.stepGallery && p.stepGallery.cols) === 4) ? p.stepGallery.cols : 3)),
+      hasSplitCompare: !!p.splitCompare,
+      hasFigureNote: !!(p.figureNote && p.figureNote.img),
+      fnHeading: (p.figureNote && p.figureNote.heading) || '',
+      fnImg: (p.figureNote && p.figureNote.img) || '',
+      fnImgEl: (p.figureNote && p.figureNote.img) ? React.createElement('img', { src: p.figureNote.img, alt: '切開・施術部位', style: { width: '100%', display: 'block' } }) : null,
+      fnIntro: ((p.figureNote && p.figureNote.intro) || []).map((t) => ({ text: t })),
+      hasFnExtra: !!(p.figureNote && p.figureNote.extra && p.figureNote.extra.text),
+      fnExtraHeading: (p.figureNote && p.figureNote.extra && p.figureNote.extra.heading) || '',
+      fnExtraText: (p.figureNote && p.figureNote.extra && p.figureNote.extra.text) || '',
+      hasSurgMethods: !!(p.surgMethods && p.surgMethods.items && p.surgMethods.items.length),
+      smHeading: (p.surgMethods && p.surgMethods.heading) || '',
+      smItems: ((p.surgMethods && p.surgMethods.items) || []).map((m) => ({
+        title: m.title || '',
+        imgEl: React.createElement('img', { src: m.img, alt: m.title || 'Method', style: { width: '100%', display: 'block' } }),
+        paras: (m.paras || []).map((t) => ({ text: t })),
+        groups: (m.groups || []).map((g) => ({
+          label: g.kind === 'dis' ? 'デメリット・注意事項' : 'メリット',
+          color: g.kind === 'dis' ? '#c2603a' : '#1f7e96',
+          iconName: g.kind === 'dis' ? 'alert-triangle' : 'circle-check',
+          iconColor: g.kind === 'dis' ? '#e07a3e' : '#2e9fc0',
+          items: (g.items || []).map((t) => ({ text: t })),
+        })),
+      })),
+      hasDualFeature: !!(p.dualFeature && p.dualFeature.items && p.dualFeature.items.length),
+      dfHeading: (p.dualFeature && p.dualFeature.heading) || '',
+      dfIntro: ((p.dualFeature && p.dualFeature.intro) || []).map((t) => ({ text: t })),
+      dfItems: ((p.dualFeature && p.dualFeature.items) || []).map((it) => ({
+        title: it.title || '', desc: it.desc || '',
+        imgEl: React.createElement('img', { src: it.img, alt: it.title || 'Feature', style: { width: '100%', display: 'block', borderRadius: '16px', border: '1px solid #ecf0f2' } }),
+      })),
+      hasIdealFor: !!(p.idealFor && p.idealFor.items && p.idealFor.items.length),
+      idealForHeading: (p.idealFor && p.idealFor.heading) || 'こんな方におすすめ',
+      idealForItems: ((p.idealFor && p.idealFor.items) || []).map((t) => ({ text: t })),
+      scHeading: (p.splitCompare && p.splitCompare.heading) || '',
+      scIntro: (p.splitCompare && p.splitCompare.intro) || '',
+      scLeftTitle: (p.splitCompare && p.splitCompare.leftTitle) || '',
+      scRightTitle: (p.splitCompare && p.splitCompare.rightTitle) || '',
+      scIncisionLeft: (p.splitCompare && p.splitCompare.incisionLeft) || '',
+      scIncisionRight: (p.splitCompare && p.splitCompare.incisionRight) || '',
+      scAgeLeft: (p.splitCompare && p.splitCompare.ageLeft) || '',
+      scAgeRight: (p.splitCompare && p.splitCompare.ageRight) || '',
+      scLiftLeft: (p.splitCompare && p.splitCompare.liftLeft) || '',
+      scLiftRight: (p.splitCompare && p.splitCompare.liftRight) || '',
+      scCandLeft: (p.splitCompare && p.splitCompare.candidatesLeft) || '',
+      scCandRight: (p.splitCompare && p.splitCompare.candidatesRight) || '',
+      scImgMiniIncision: this.scImg(p.splitCompare && p.splitCompare.incisionLeftImg, 'ミニ切開リフトの切開位置'),
+      scImgFullIncision: this.scImg(p.splitCompare && p.splitCompare.incisionRightImg, '切開リフトの切開位置'),
+      scImgMiniDissection: this.scImg(p.splitCompare && p.splitCompare.dissectionLeftImg, 'ミニ切開リフトの剥離範囲'),
+      scImgFullDissection: this.scImg(p.splitCompare && p.splitCompare.dissectionRightImg, '切開リフトの剥離範囲'),
+      hasBenefits: !!((p.benefitGroups && p.benefitGroups.length) || (p.benefits && p.benefits.length)),
+      noBenefits: !((p.benefitGroups && p.benefitGroups.length) || (p.benefits && p.benefits.length)),
+      factDuration: (p.facts && p.facts.duration) || '要確認',
+      factAnesthesia: (p.facts && p.facts.anesthesia) || '要確認',
+      factPrice: (p.facts && p.facts.price) || '要確認',
+      factPriceNote: (p.facts && p.facts.priceNote) || '',
+      stayRows: (p.facts && p.facts.stay) || [],
+      hasStaySchedule: !!(p.facts && p.facts.stay && p.facts.stay.length),
+      factStay: (p.facts && !p.facts.stay && p.facts.stayText) || '要確認',
+      stayNote: (p.facts && p.facts.stayNote) || '',
+      hasStayNote: !!(p.facts && p.facts.stayNote),
+      hasFacts: !!p.facts,
+      noFacts: !p.facts,
+      siblings: siblings,
+      hasSiblings: siblings.length > 0,
+    });
+  }
+}
+</script>
+</body>
+</html>

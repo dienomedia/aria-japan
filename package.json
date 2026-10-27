@@ -1,0 +1,23 @@
+{
+  "name": "aria-japan",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/netlify": "^8.2.10",
+    "@lucide/astro": "^1.62.0",
+    "astro": "^7.4.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22.23.4"
+  }
+}

@@ -1,0 +1,46 @@
+<!-- Decap CMS admin entry point -->
+<!-- Place at: public/admin/index.html -->
+<!-- Visiting https://your-site.netlify.app/admin/ loads the CMS UI from this file. -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Aria Korea — Content Manager</title>
+    <!-- Netlify Identity widget: handles login for editors -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  </head>
+  <body>
+    <!-- Decap CMS core: reads ./config.yml automatically -->
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  </body>
+</html>
+
+<!--
+  ADDITIONAL STEP (important):
+  Add the Identity redirect snippet to your SITE's base layout <head>
+  (NOT just here) so that after an editor confirms their email/invite,
+  they are sent to /admin/ and logged in:
+
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on('init', user => {
+          if (!user) {
+            window.netlifyIdentity.on('login', () => {
+              document.location.href = '/admin/';
+            });
+          }
+        });
+      }
+    </script>
+
+  And make sure the Identity widget script is also loaded in the base layout:
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+  Netlify dashboard steps (one-time):
+    1. Site → Identity → Enable Identity
+    2. Identity → Registration → Invite only
+    3. Identity → Services → Enable Git Gateway
+    4. Identity → Invite users → add the team's emails
+-->

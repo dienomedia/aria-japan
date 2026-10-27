@@ -1,0 +1,809 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import Icon from '../../components/Icon.astro';
+import { SURGERY_CATEGORIES } from '../../data/surgeries';
+import { procedureVals } from '../../lib/procedure';
+
+export function getStaticPaths() {
+  return SURGERY_CATEGORIES.flatMap((category) =>
+    category.procedures.map((procedure) => ({ params: { slug: procedure.slug }, props: { procedure, category } })),
+  );
+}
+
+const { procedure, category } = Astro.props;
+const vals = procedureVals(procedure, category);
+const {
+  aboutFigEl,
+  aboutGroups,
+  aboutParas,
+  afCaption,
+  afLegend,
+  afSideParas,
+  benefitGroups,
+  cartilageItems,
+  caseList,
+  catName,
+  catSlug,
+  compareItems,
+  compareTitle,
+  dfHeading,
+  dfIntro,
+  dfItems,
+  factAnesthesia,
+  factDuration,
+  factPrice,
+  factPriceNote,
+  faqs,
+  figureGroups,
+  fnExtraHeading,
+  fnExtraText,
+  fnHeading,
+  fnImgEl,
+  fnIntro,
+  hasAbout,
+  hasAboutFigure,
+  hasAfMeta,
+  hasAfSide,
+  hasBenefits,
+  hasCartilageGallery,
+  hasCases,
+  hasCompareFigure,
+  hasDualFeature,
+  hasFaqs,
+  hasFigureGroups,
+  hasFigureNote,
+  hasFnExtra,
+  hasIdealFor,
+  hasMethods,
+  hasRichFigures,
+  hasSeptumFigure,
+  hasSiblings,
+  hasSplitCompare,
+  hasStabilityGraph,
+  hasStayNote,
+  hasStaySchedule,
+  hasStepGallery,
+  hasSurgMethods,
+  hasTechniques,
+  hasTypeGallery,
+  hasVsTable,
+  heroImgEl,
+  heroLabel,
+  idealForHeading,
+  idealForItems,
+  methodRows,
+  methodsHeading,
+  name,
+  noAbout,
+  noAfSide,
+  noBenefits,
+  noFacts,
+  noHeroImg,
+  richFigures,
+  scAgeLeft,
+  scAgeRight,
+  scCandLeft,
+  scCandRight,
+  scHeading,
+  scImgFullDissection,
+  scImgFullIncision,
+  scImgMiniDissection,
+  scImgMiniIncision,
+  scIncisionLeft,
+  scIncisionRight,
+  scIntro,
+  scLeftTitle,
+  scLiftLeft,
+  scLiftRight,
+  scRightTitle,
+  septumHeading,
+  septumPanels,
+  septumPara,
+  siblings,
+  smHeading,
+  smItems,
+  stabilityHeading,
+  stabilityIntro,
+  stabilityPoints,
+  stayNote,
+  stayRows,
+  stepGridClass,
+  stepHeading,
+  stepIntro,
+  stepItems,
+  summary,
+  techHeading,
+  techniques,
+  typeGalleryItems,
+  vsLeftTitle,
+  vsRightTitle,
+  vsRows
+} = vals;
+---
+
+<Base title={`${name.replace(/\n/g, ' ')} | Ariacorporation`} description={summary}>
+  <div style="font-family:'Noto Sans JP',system-ui,sans-serif; color:#122a3a; background:#eef6fa; min-height:100vh; -webkit-font-smoothing:antialiased; display:flex; flex-direction:column;">
+    <Nav preLine />
+
+  
+    <header style="background:linear-gradient(180deg,#eef6fa 0%,#ffffff 100%); border-bottom:1px solid #e1edf3;">
+      <div style="max-width:1320px; margin:0 auto; padding:clamp(26px,3.5vw,48px) clamp(20px,5vw,72px) clamp(40px,5vw,60px); display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:clamp(32px,4vw,60px); align-items:center;">
+        <div>
+          <div style="display:flex; align-items:center; gap:9px; font-size:13.5px; font-weight:600; color:#5a7488; margin-bottom:24px; flex-wrap:wrap;">
+            <a href="/" style="color:#5a7488;">ホーム</a>
+            <Icon name="chevron-right" style="font-size:15px; opacity:.5;" />
+            <a href="/#surgeries" style="color:#5a7488;">施術一覧</a>
+            <Icon name="chevron-right" style="font-size:15px; opacity:.5;" />
+            <a href={`/surgeries/${catSlug}/`} style="color:#5a7488;">{catName}</a>
+            <Icon name="chevron-right" style="font-size:15px; opacity:.5;" />
+            <span style="color:#122a3a; white-space:pre-line;">{name}</span>
+          </div>
+          <div style="display:inline-flex; align-items:center; gap:8px; background:#eaf6fa; color:#2e9fc0; font-size:12.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:7px 14px; border-radius:999px; margin-bottom:20px;">
+  {catName}
+          </div>
+          <h1 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:800; font-size:clamp(32px,4.4vw,54px); line-height:1.06; letter-spacing:-.02em; margin:0 0 18px;">{name}</h1>
+          <p style="font-size:clamp(16px,1.6vw,19px); line-height:1.6; color:#445d6e; max-width:540px; margin:0 0 30px; white-space:pre-line;">{summary}</p>
+          <div style="display:flex; flex-wrap:wrap; gap:13px;">
+            <a href="https://lin.ee/3KJTZXJ" style="display:inline-flex; align-items:center; gap:10px; background:var(--accent); color:#fff; font-weight:700; font-size:16px; padding:15px 26px; border-radius:13px; box-shadow:0 16px 34px -16px rgba(255,122,77,.85);">
+              <Icon name="message-circle" style="font-size:19px;" /> この手術について問い合わせる
+            </a>
+            <a href={`/surgeries/${catSlug}/`} style="display:inline-flex; align-items:center; gap:9px; border:1.5px solid #cfdfe7; color:#122a3a; font-weight:700; font-size:16px; padding:15px 24px; border-radius:13px;">
+              {catName}をすべて見る <Icon name="arrow-right" style="font-size:18px;" />
+            </a>
+          </div>
+        </div>
+        <div class="ph" style="aspect-ratio:4/3.2; border-radius:24px; min-height:300px; box-shadow:0 30px 60px -30px rgba(16,41,61,.4);"><Fragment set:html={heroImgEl} />{noHeroImg && (<><span class="ph-l">{heroLabel}</span></>)}</div>
+      </div>
+    </header>
+
+  
+    <main style="flex:1; max-width:1320px; width:100%; margin:0 auto; padding:clamp(40px,5vw,72px) clamp(20px,5vw,72px) clamp(56px,7vw,96px); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,340px); gap:clamp(32px,4vw,56px); align-items:start;">
+
+    
+      <article>
+        <section style="margin-bottom:44px;">
+          <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(24px,2.6vw,30px); line-height:1.18; letter-spacing:-.01em; margin:0 0 16px;">この手術について</h2>
+          {hasAbout && (<>
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              {aboutParas.map((para) => (<>
+                <p style="font-size:16.5px; line-height:1.75; color:#445d6e; margin:0; white-space:pre-line;">{para.text}</p>
+              </>))}
+            </div>
+            {aboutGroups.map((grp) => (<>
+              <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,21px); line-height:1.25; letter-spacing:-.01em; margin:30px 0 12px; white-space:pre-line;">{grp.heading}</h3>
+              <div style="display:flex; flex-direction:column; gap:14px;">
+                {grp.paras.map((para) => (<>
+                  <p style="font-size:16.5px; line-height:1.75; color:#445d6e; margin:0; white-space:pre-line;">{para.text}</p>
+                </>))}
+              </div>
+              {grp.hasImages && (<>
+                <div style="display:flex; flex-direction:column; gap:clamp(16px,2vw,22px); margin-top:22px;">
+                  {grp.images.map((im) => (<>
+                    <Fragment set:html={im.el} />
+                  </>))}
+                </div>
+              </>)}
+            </>))}
+            {hasAboutFigure && (<>
+              <figure style="margin:28px 0 0;">
+                {hasAfSide && (<>
+                  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:clamp(22px,3vw,40px); align-items:center;">
+                    <div style="border-radius:18px; overflow:hidden; border:1px solid #e1edf3; background:#fff;">
+                      <Fragment set:html={aboutFigEl} />
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:16px;">
+                      {afSideParas.map((sp) => (<>
+                        <p style="font-size:16px; line-height:1.72; color:#445d6e; margin:0; white-space:pre-line;">{sp.text}</p>
+                      </>))}
+                    </div>
+                  </div>
+                </>)}
+                {noAfSide && (<>
+                <div style="border-radius:18px; overflow:hidden; border:1px solid #e1edf3; background:#fbfcfd;">
+                  <Fragment set:html={aboutFigEl} />
+                </div>
+                {hasAfMeta && (<>
+                <figcaption style="margin-top:16px;">
+                  <div style="display:flex; flex-wrap:wrap; gap:12px 26px; margin-bottom:12px;">
+                    {afLegend.map((lg) => (<>
+                      <span style="display:inline-flex; align-items:center; gap:9px; font-size:14.5px; font-weight:600; color:#122a3a;">
+                        <span style={`width:15px; height:15px; border-radius:4px; flex:none; background:${lg.color}; box-shadow:0 0 0 1px rgba(16,41,61,.12);`}></span>{lg.label}
+                      </span>
+                    </>))}
+                  </div>
+                  <p style="font-size:14.5px; line-height:1.6; color:#5a7488; margin:0; white-space:pre-line;">{afCaption}</p>
+                </figcaption>
+                </>)}
+                </>)}
+              </figure>
+            </>)}
+            {hasMethods && (<>
+              <div style="margin-top:38px;">
+                <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(20px,2.3vw,26px); line-height:1.2; letter-spacing:-.01em; margin:0 0 26px; color:#122a3a; white-space:pre-line;">{methodsHeading}</h3>
+                <div style="display:flex; flex-direction:column; gap:clamp(26px,3.4vw,42px);">
+                  {methodRows.map((mr) => (<>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:clamp(22px,3vw,40px); align-items:center;">
+                      <div style="border-radius:16px; overflow:hidden; border:1px solid #e6edf2; background:#fff;">
+                        <Fragment set:html={mr.imgEl} />
+                      </div>
+                      <div>
+                        <h4 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.25; letter-spacing:-.01em; margin:0 0 14px; color:#122a3a; white-space:pre-line;">{mr.title}</h4>
+                        <div style="height:2px; background:#122a3a; width:100%; margin:0 0 16px;"></div>
+                        <p style="font-size:16px; line-height:1.72; color:#445d6e; margin:0; white-space:pre-line;">{mr.text}</p>
+                      </div>
+                    </div>
+                  </>))}
+                </div>
+              </div>
+            </>)}
+          </>)}
+          {noAbout && (<>
+            <p style="font-size:16.5px; line-height:1.75; color:#445d6e; margin:0 0 16px;">{summary} 詳細な内容は現在準備中です。最終ページでは、施術方法や適応対象、予想される結果、プラン全体での位置づけなどを、韓国での治療を検討する海外患者様向けに詳しくご説明します。</p>
+            <p style="font-size:16.5px; line-height:1.75; color:#445d6e; margin:0;">滞在中は、カウンセリング・手術・通訳・フォローアップケアまで、アリアコーポレーションがすべてを調整し、全行程をシンプルで透明なものに保ちます。</p>
+          </>)}
+          {hasIdealFor && (<>
+            <div style="margin-top:30px;">
+              <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.25; letter-spacing:-.01em; margin:0 0 16px; color:#122a3a; white-space:pre-line;">{idealForHeading}</h3>
+              <div style="display:flex; flex-direction:column; gap:13px;">
+                {idealForItems.map((it) => (<>
+                  <div style="display:flex; gap:14px; align-items:flex-start;">
+                    <Icon name="circle-check" style="font-size:21px; color:#2e9fc0; flex:none; margin-top:1px;" />
+                    <p style="font-size:16px; line-height:1.6; color:#445d6e; margin:0; white-space:pre-line;">{it.text}</p>
+                  </div>
+                </>))}
+              </div>
+            </div>
+          </>)}
+          {hasTypeGallery && (<>
+            <div style="margin-top:34px;">
+              <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.25; letter-spacing:-.01em; margin:0 0 20px; color:#122a3a;">鼻整形で効果が出やすい4つの鼻のタイプ</h3>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(155px,1fr)); gap:clamp(14px,2vw,22px);">
+                {typeGalleryItems.map((ti) => (<>
+                  <div style="display:flex; flex-direction:column;">
+                    <div style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(30px,3.2vw,40px); color:#cdd9e1; line-height:1; letter-spacing:-.02em; white-space:pre-line;">{ti.num}</div>
+                    <div style="font-size:15.5px; font-weight:700; color:#122a3a; margin:9px 0 13px; white-space:pre-line;">{ti.label}</div>
+                    <Fragment set:html={ti.imgEl} />
+                  </div>
+                </>))}
+              </div>
+            </div>
+          </>)}
+          {hasCartilageGallery && (<>
+            <div style="margin-top:38px;">
+              <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.3; letter-spacing:-.01em; margin:0 0 22px; color:#122a3a;">インプラントを使わない鼻整形で使用される軟骨の種類</h3>
+              <div class="cartilage-grid">
+                {cartilageItems.map((ca) => (<>
+                  <div style="display:flex; flex-direction:column;">
+                    <Fragment set:html={ca.imgEl} />
+                    <p style="font-size:16px; font-weight:700; color:#122a3a; line-height:1.35; margin:15px 0 7px; white-space:pre-line;">{ca.label}</p>
+                    <p style="font-size:14.5px; line-height:1.62; color:#5a7488; margin:0; white-space:pre-line;">{ca.desc}</p>
+                  </div>
+                </>))}
+              </div>
+            </div>
+          </>)}
+          {hasSeptumFigure && (<>
+            <div style="margin-top:38px; background:#f7fbfd; border:1px solid #e1edf3; border-radius:20px; padding:clamp(22px,3vw,32px);">
+              <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.3; letter-spacing:-.01em; margin:0 0 14px; color:#122a3a; white-space:pre-line;">{septumHeading}</h3>
+              <p style="font-size:16px; line-height:1.72; color:#445d6e; margin:0; white-space:pre-line;">{septumPara}</p>
+              <div style="margin-top:26px; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:clamp(18px,2.5vw,30px);">
+                {septumPanels.map((sp) => (<>
+                  <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+                    <p style="font-size:16px; font-weight:700; color:#122a3a; line-height:1.35; margin:0; white-space:pre-line;">{sp.title}</p>
+                    <p style="font-size:14px; color:#5a7488; line-height:1.45; margin:5px 0 16px; white-space:pre-line;">{sp.sub}</p>
+                    <Fragment set:html={sp.imgEl} />
+                    <p style="font-size:14.5px; font-weight:600; color:#3f6075; margin:14px 0 0; white-space:pre-line;">{sp.caption}</p>
+                  </div>
+                </>))}
+              </div>
+            </div>
+          </>)}
+          {hasStabilityGraph && (<>
+            <div style="margin-top:38px;">
+              <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(20px,2.3vw,25px); line-height:1.25; letter-spacing:-.01em; margin:0 0 12px; color:#122a3a; white-space:pre-line;">{stabilityHeading}</h3>
+              <p style="font-size:16.5px; line-height:1.7; color:#445d6e; margin:0 0 22px; white-space:pre-line;">{stabilityIntro}</p>
+              <div style="background:linear-gradient(180deg,#fcfbf8,#fbfdfe); border:1px solid #e7eef2; border-radius:20px; padding:clamp(14px,2.4vw,26px);">
+                <svg viewBox="0 0 1150 540" style="width:100%; height:auto; display:block; font-family:'Noto Sans JP',sans-serif;" role="img" aria-label="Tissue stability over time after rhinoplasty">
+                  <defs>
+                    <linearGradient id="rvLine" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0" stop-color="#3b82f6"></stop>
+                      <stop offset="1" stop-color="#4fd1c5"></stop>
+                    </linearGradient>
+                    <linearGradient id="rvArea" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stop-color="#3b82f6" stop-opacity="0.18"></stop>
+                      <stop offset="1" stop-color="#3b82f6" stop-opacity="0"></stop>
+                    </linearGradient>
+                  </defs>
+                
+                  <rect x="655" y="60" width="190" height="320" fill="#3b82f6" opacity="0.07"></rect>
+                
+                  <path d="M100,360 C121.7,357.5 171.7,357 230,345 C288.3,333 379.2,311.3 450,288 C520.8,264.7 589.2,233 655,205 C720.8,177 785.5,142.2 845,120 L845,380 L100,380 Z" fill="url(#rvArea)"></path>
+                
+                  <line x1="70" y1="380" x2="1012" y2="380" stroke="#c9d4db" stroke-width="2.5"></line>
+                  <path d="M1012,380 L998,373 M1012,380 L998,387" stroke="#c9d4db" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
+                
+                  <line x1="230" y1="345" x2="230" y2="380" stroke="#9cc3f5" stroke-width="2"></line>
+                  <line x1="450" y1="288" x2="450" y2="380" stroke="#9cc3f5" stroke-width="2"></line>
+                  <line x1="655" y1="205" x2="655" y2="380" stroke="#6aa8f0" stroke-width="2.5"></line>
+                  <line x1="845" y1="120" x2="845" y2="380" stroke="#6aa8f0" stroke-width="2.5"></line>
+                
+                  <path d="M100,360 C121.7,357.5 171.7,357 230,345 C288.3,333 379.2,311.3 450,288 C520.8,264.7 589.2,233 655,205 C720.8,177 785.5,142.2 845,120 C904.5,97.8 984.2,80 1012,72" fill="none" stroke="url(#rvLine)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path>
+                  <path d="M1012,72 L995,71 M1012,72 L1004,87" stroke="#4fd1c5" stroke-width="5" fill="none" stroke-linecap="round"></path>
+                
+                  <path d="M690,232 l34,20 l-34,20 M724,232 l34,20 l-34,20" fill="none" stroke="#3b82f6" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"></path>
+                
+                  <circle cx="100" cy="360" r="9" fill="#3b82f6"></circle>
+                  <circle cx="230" cy="345" r="10" fill="#ffffff" stroke="#3b82f6" stroke-width="4"></circle>
+                  <circle cx="450" cy="288" r="9" fill="#3b82f6"></circle>
+                  <circle cx="655" cy="205" r="10" fill="#3b82f6"></circle>
+                  <circle cx="845" cy="120" r="11" fill="#3b82f6"></circle>
+                
+                  <path d="M905,70 l22,40 l-44,0 Z" fill="none" stroke="#122a3a" stroke-width="3.5" stroke-linejoin="round"></path>
+                  <line x1="905" y1="84" x2="905" y2="96" stroke="#122a3a" stroke-width="3.5" stroke-linecap="round"></line>
+                  <circle cx="905" cy="103" r="1.8" fill="#122a3a"></circle>
+                  <text x="872" y="148" font-family="'Zen Kaku Gothic New',sans-serif" font-weight="700" font-size="25" fill="#122a3a">推奨される</text>
+                  <text x="872" y="180" font-family="'Zen Kaku Gothic New',sans-serif" font-weight="700" font-size="25" fill="#122a3a">再手術の時期：</text>
+                  <text x="872" y="212" font-size="23" fill="#445d6e">最低6カ月以降</text>
+                
+                  <text x="230" y="428" text-anchor="middle" font-family="'Zen Kaku Gothic New',sans-serif" font-weight="700" font-size="27" fill="#122a3a">1カ月後</text>
+                  <text x="450" y="428" text-anchor="middle" font-family="'Zen Kaku Gothic New',sans-serif" font-weight="700" font-size="27" fill="#122a3a">3カ月後</text>
+                  <text x="655" y="428" text-anchor="middle" font-family="'Zen Kaku Gothic New',sans-serif" font-weight="700" font-size="27" fill="#122a3a">6カ月後</text>
+                  <text x="845" y="428" text-anchor="middle" font-family="'Zen Kaku Gothic New',sans-serif" font-weight="700" font-size="27" fill="#122a3a">1年後</text>
+                  <text x="230" y="468" text-anchor="middle" font-size="22" fill="#5a7488">［組織の安定度］</text>
+                  <text x="450" y="468" text-anchor="middle" font-size="22" fill="#5a7488">［組織の安定度］</text>
+                  <text x="655" y="468" text-anchor="middle" font-size="22" fill="#5a7488">［組織の安定度］</text>
+                  <text x="845" y="468" text-anchor="middle" font-size="22" fill="#5a7488">［組織の安定度］</text>
+                </svg>
+              </div>
+              <div style="margin-top:22px; display:flex; flex-direction:column; gap:13px;">
+                {stabilityPoints.map((pt) => (<>
+                  <div style="display:flex; gap:12px; align-items:flex-start;">
+                    <span style="flex:none; width:7px; height:7px; border-radius:50%; background:var(--accent); margin-top:9px;"></span>
+                    <p style="font-size:16px; line-height:1.65; color:#445d6e; margin:0; white-space:pre-line;">{pt.text}</p>
+                  </div>
+                </>))}
+              </div>
+            </div>
+          </>)}
+          {hasCompareFigure && (<>
+            <div style="margin-top:32px; background:#f7fbfd; border:1px solid #e1edf3; border-radius:20px; padding:clamp(22px,3vw,32px);">
+              <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.2; letter-spacing:-.01em; margin:0 0 22px; color:#122a3a; white-space:pre-line;">{compareTitle}</h3>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:clamp(18px,2.5vw,28px);">
+                {compareItems.map((ci) => (<>
+                  <div style="display:flex; flex-direction:column;">
+                    <Fragment set:html={ci.imgEl} />
+                    <p style="font-size:15.5px; font-weight:700; color:#122a3a; line-height:1.4; margin:16px 0 8px; white-space:pre-line;">{ci.lead}</p>
+                    <p style="font-size:14.5px; line-height:1.6; color:#5a7488; margin:0; white-space:pre-line;">{ci.desc}</p>
+                  </div>
+                </>))}
+              </div>
+            </div>
+          </>)}
+          {hasRichFigures && (<>
+            <div style="margin-top:32px; display:flex; flex-direction:column; gap:34px;">
+              {richFigures.map((fig) => (<>
+                <div>
+                  {fig.heading && (<>
+                    <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.2; letter-spacing:-.01em; margin:0 0 10px; color:#122a3a; white-space:pre-line;">{fig.heading}</h3>
+                  </>)}
+                  {fig.intro && (<>
+                    <p style="font-size:16px; line-height:1.7; color:#445d6e; margin:0 0 18px; max-width:680px; white-space:pre-line;">{fig.intro}</p>
+                  </>)}
+                  <Fragment set:html={fig.el} />
+                  {fig.captionLead && (<>
+                    <p style="font-size:15.5px; font-weight:700; color:#122a3a; line-height:1.4; margin:16px 0 6px; white-space:pre-line;">{fig.captionLead}</p>
+                  </>)}
+                  {fig.caption && (<>
+                    <p style="font-size:14.5px; line-height:1.6; color:#5a7488; margin:0; white-space:pre-line;">{fig.caption}</p>
+                  </>)}
+                </div>
+              </>))}
+            </div>
+          </>)}
+          {hasVsTable && (<>
+            <div style="margin-top:26px; border:1px solid #e1edf3; border-radius:18px; overflow:hidden;">
+              <div style="display:grid; grid-template-columns:1fr 130px 1fr; background:#0e2738;">
+                <div style="padding:14px 18px; text-align:center; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(14px,1.6vw,17px); color:#fff; white-space:pre-line;">{vsLeftTitle}</div>
+                <div style="padding:14px 8px; text-align:center; font-weight:800; font-size:15px; color:#7fd2e8; align-self:center;">VS</div>
+                <div style="padding:14px 18px; text-align:center; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(14px,1.6vw,17px); color:#fff; white-space:pre-line;">{vsRightTitle}</div>
+              </div>
+              {vsRows.map((r) => (<>
+                <div style="display:grid; grid-template-columns:1fr 130px 1fr; border-top:1px solid #e1edf3;">
+                  <div style="padding:16px 18px; font-size:14.5px; line-height:1.6; color:#445d6e; text-align:center; align-self:center; white-space:pre-line;">{r.left}</div>
+                  <div style="padding:16px 8px; font-size:12.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#2e9fc0; background:#f7fbfd; text-align:center; align-self:center; white-space:pre-line;">{r.label}</div>
+                  <div style="padding:16px 18px; font-size:14.5px; line-height:1.6; color:#445d6e; text-align:center; align-self:center; white-space:pre-line;">{r.right}</div>
+                </div>
+              </>))}
+            </div>
+          </>)}
+          {hasFigureGroups && (<>
+            <div style="margin-top:34px; display:flex; flex-direction:column; gap:36px;">
+              {figureGroups.map((grp) => (<>
+                <div>
+                  <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(18px,2vw,22px); line-height:1.2; letter-spacing:-.01em; margin:0 0 10px; color:#122a3a; white-space:pre-line;">{grp.heading}</h3>
+                  {grp.intro && (<>
+                    <p style="font-size:16px; line-height:1.7; color:#445d6e; margin:0 0 20px; max-width:700px; white-space:pre-line;">{grp.intro}</p>
+                  </>)}
+                  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:clamp(18px,2.5vw,26px);">
+                    {grp.panels.map((pn) => (<>
+                      <div style="display:flex; flex-direction:column;">
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                          <span style="flex:none; width:26px; height:26px; border-radius:999px; background:var(--accent); color:#fff; font:700 13px/26px 'Noto Sans JP'; text-align:center; white-space:pre-line;">{pn.num}</span>
+                          <span style="font-size:15px; font-weight:700; color:#122a3a; line-height:1.3; white-space:pre-line;">{pn.captionLead}</span>
+                        </div>
+                        <Fragment set:html={pn.el} />
+                        {pn.caption && (<>
+                          <p style="font-size:14px; line-height:1.6; color:#5a7488; margin:12px 0 0; white-space:pre-line;">{pn.caption}</p>
+                        </>)}
+                      </div>
+                    </>))}
+                  </div>
+                </div>
+              </>))}
+            </div>
+          </>)}
+        </section>
+
+        {hasStepGallery && (<>
+          <section style="margin-bottom:44px;">
+            <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.2; letter-spacing:-.01em; margin:0 0 16px;">{stepHeading}</h2>
+            <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:30px;">
+              {stepIntro.map((line) => (<>
+                <p style="font-size:16px; line-height:1.65; color:#445d6e; margin:0; white-space:pre-line;">{line.text}</p>
+              </>))}
+            </div>
+            <div class={stepGridClass}>
+              {stepItems.map((s) => (<>
+                <div style="display:flex; flex-direction:column;">
+                  <div style="position:relative;">
+                    {s.n && (<><span style="position:absolute; top:10px; left:10px; z-index:2; display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; background:#122a3a; color:#fff; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:15px; border-radius:8px; white-space:pre-line;">{s.n}</span></>)}
+                    <Fragment set:html={s.imgEl} />
+                  </div>
+                  <div style="margin-top:12px;">
+                    {s.title && (<>
+                      <p style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:15.5px; line-height:1.3; color:#122a3a; margin:0 0 5px; white-space:pre-line;">{s.title}</p>
+                    </>)}
+                    <p style="font-size:14.5px; line-height:1.55; color:#445d6e; margin:0; white-space:pre-line;">{s.caption}</p>
+                  </div>
+                </div>
+              </>))}
+            </div>
+          </section>
+        </>)}
+
+        {hasFaqs && (<>
+          <section style="margin-bottom:44px;">
+            <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.18; letter-spacing:-.01em; margin:0 0 20px;">よくあるご質問</h2>
+            <div style="display:flex; flex-direction:column; gap:18px;">
+              {faqs.map((f) => (<>
+                <div style="border:1px solid #e3eaef; border-radius:14px; padding:24px 26px; background:#f8fafb;">
+                  <div style="display:flex; gap:14px; align-items:flex-start; margin-bottom:12px;">
+                    <span style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:18px; color:#2e9fc0; line-height:1.4; flex:none;">Q.</span>
+                    <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(17px,1.9vw,20px); line-height:1.4; letter-spacing:-.01em; margin:0; color:#122a3a; white-space:pre-line;">{f.q}</h3>
+                  </div>
+                  <div style="display:flex; gap:14px; align-items:flex-start;">
+                    <span style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:18px; color:#9aabb6; line-height:1.65; flex:none;">A.</span>
+                    <p style="font-size:16px; line-height:1.7; color:#445d6e; margin:0; white-space:pre-line;">{f.a}</p>
+                  </div>
+                </div>
+              </>))}
+            </div>
+          </section>
+        </>)}
+
+      
+        {hasCases && (<>
+        <section style="margin-bottom:48px;">
+          <div style="display:flex; flex-direction:column; gap:clamp(34px,4vw,52px);">
+            {caseList.map((cs) => (<>
+              <div>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin-bottom:26px;">
+                  <span style="display:inline-flex; align-items:center; white-space:nowrap; padding:7px 22px; border-radius:999px; background:#6f86ab; color:#fff; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:600; font-size:13px; letter-spacing:.14em;">{cs.badge}</span>
+                  <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(20px,2.3vw,26px); line-height:1.2; letter-spacing:-.01em; margin:0; color:#122a3a; text-align:center; white-space:pre-line;">{cs.title}</h3>
+                </div>
+                <div class={cs.gridClass} style="align-items:start;">
+                  {cs.steps.map((st) => (<>
+                    <div style="display:flex; flex-direction:column;">
+                      <div style={`border-radius:16px; overflow:hidden; border:1px solid #e6edf2; background:#fff; aspect-ratio:${cs.aspect};`}>
+                        <Fragment set:html={st.imgEl} />
+                      </div>
+                      <p style="font-size:14.5px; line-height:1.6; color:#5a7488; margin:14px 0 0; text-align:center; white-space:pre-line;">{st.caption}</p>
+                    </div>
+                  </>))}
+                </div>
+              </div>
+            </>))}
+          </div>
+        </section>
+        </>)}
+
+      
+        {hasTechniques && (<>
+        <section style="margin-bottom:44px;">
+          <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.18; letter-spacing:-.01em; margin:0 0 24px;">{techHeading}</h2>
+          <div style="display:flex; flex-direction:column; gap:28px;">
+            {techniques.map((t) => (<>
+              <div style="background:#f7fbfd; border:1px solid #e1edf3; border-radius:20px; padding:clamp(24px,3vw,34px);">
+                {t.title && (<>
+                  <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(19px,2.1vw,23px); line-height:1.2; letter-spacing:-.01em; margin:0 0 18px; color:#122a3a; white-space:pre-line;">{t.title}</h3>
+                </>)}
+                <div style="display:flex; flex-direction:column; gap:16px;">
+                  {t.blocks.map((blk) => (<>
+                    {blk.isPara && (<>
+                      <p style="font-size:16px; line-height:1.72; color:#445d6e; margin:0; white-space:pre-line;">{blk.text}</p>
+                    </>)}
+                    {blk.isSubhead && (<>
+                      <div style="font:700 12.5px/1 'Noto Sans JP'; letter-spacing:.1em; text-transform:uppercase; color:#2e9fc0; margin-top:6px; white-space:pre-line;">{blk.text}</div>
+                    </>)}
+                    {blk.isOlist && (<>
+                      <ol style="list-style:none; counter-reset:step; margin:0; padding:0; display:flex; flex-direction:column; gap:13px;">
+                        {blk.items.map((it) => (<>
+                          <li style="position:relative; padding-left:42px;">
+                            <span style="position:absolute; left:0; top:-1px; width:28px; height:28px; border-radius:999px; background:var(--accent); color:#fff; font:700 13px/28px 'Noto Sans JP'; text-align:center; white-space:pre-line;">{it.num}</span>
+                            <p style="font-size:15.5px; line-height:1.6; color:#33506a; margin:0; font-weight:500; white-space:pre-line;">{it.text}</p>
+                            {it.hasSub && (<>
+                              <ul style="list-style:none; margin:9px 0 0; padding:0; display:flex; flex-direction:column; gap:7px;">
+                                {it.sub.map((su) => (<>
+                                  <li style="position:relative; padding-left:16px; font-size:14.5px; line-height:1.55; color:#5a7488;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:#9fc7d6;"></span>{su.text}</li>
+                                </>))}
+                              </ul>
+                            </>)}
+                          </li>
+                        </>))}
+                      </ol>
+                    </>)}
+                    {blk.isUlist && (<>
+                      <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:11px;">
+                        {blk.items.map((it) => (<>
+                          <li>
+                            <div style="display:flex; gap:11px; align-items:flex-start;">
+                              <Icon name="check" style="font-size:18px; color:#2e9fc0; flex:none; margin-top:2px;" />
+                              <p style="font-size:15.5px; line-height:1.6; color:#445d6e; margin:0; white-space:pre-line;">{it.text}</p>
+                            </div>
+                            {it.hasSub && (<>
+                              <ul style="list-style:none; margin:8px 0 0 29px; padding:0; display:flex; flex-direction:column; gap:7px;">
+                                {it.sub.map((su) => (<>
+                                  <li style="position:relative; padding-left:16px; font-size:14.5px; line-height:1.55; color:#5a7488;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:#9fc7d6;"></span>{su.text}</li>
+                                </>))}
+                              </ul>
+                            </>)}
+                          </li>
+                        </>))}
+                      </ul>
+                    </>)}
+                  </>))}
+                </div>
+              </div>
+            </>))}
+          </div>
+        </section>
+        </>)}
+
+        {hasFigureNote && (<>
+        <section style="margin-bottom:44px;">
+          {fnHeading && (<><h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.2; letter-spacing:-.01em; margin:0 0 18px;">{fnHeading}</h2></>)}
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:clamp(24px,3.4vw,44px); align-items:center;">
+            <div style="border-radius:18px; overflow:hidden; border:1px solid #ecf0f2; background:#0c0c0c;">
+              <Fragment set:html={fnImgEl} />
+            </div>
+            <div style="display:flex; flex-direction:column; gap:22px;">
+              {fnIntro.map((line) => (<>
+                <p style="font-size:16.5px; line-height:1.72; color:#445d6e; margin:0; white-space:pre-line;">{line.text}</p>
+              </>))}
+              {hasFnExtra && (<>
+                <div style="border-top:1px solid #e7edf0; padding-top:20px;">
+                  <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(17px,1.9vw,20px); line-height:1.25; letter-spacing:-.01em; margin:0 0 10px; color:#122a3a; white-space:pre-line;">{fnExtraHeading}</h3>
+                  <p style="font-size:16px; line-height:1.7; color:#5a7488; margin:0; white-space:pre-line;">{fnExtraText}</p>
+                </div>
+              </>)}
+            </div>
+          </div>
+        </section>
+        </>)}
+
+        {hasDualFeature && (<>
+        <section style="margin-bottom:44px;">
+          <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.2; letter-spacing:-.01em; margin:0 0 14px;">{dfHeading}</h2>
+          <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:30px;">
+            {dfIntro.map((line) => (<>
+              <p style="font-size:16px; line-height:1.7; color:#445d6e; margin:0; max-width:880px; white-space:pre-line;">{line.text}</p>
+            </>))}
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(22px,3vw,36px);">
+            {dfItems.map((it) => (<>
+              <div style="display:flex; flex-direction:column;">
+                <Fragment set:html={it.imgEl} />
+                <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(17px,1.9vw,20px); line-height:1.25; letter-spacing:-.01em; margin:18px 0 10px; color:#122a3a; white-space:pre-line;">{it.title}</h3>
+                <p style="font-size:15px; line-height:1.65; color:#5a7488; margin:0; white-space:pre-line;">{it.desc}</p>
+              </div>
+            </>))}
+          </div>
+        </section>
+        </>)}
+
+        {hasSplitCompare && (<>
+        <section style="margin-bottom:44px;">
+          <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.18; letter-spacing:-.01em; margin:0 0 12px;">{scHeading}</h2>
+          <p style="font-size:16px; line-height:1.65; color:#445d6e; margin:0 0 26px; max-width:720px; white-space:pre-line;">{scIntro}</p>
+          <div style="border:1px solid #e1edf3; border-radius:20px; overflow:hidden;">
+
+            <div style="display:grid; grid-template-columns:minmax(0,1fr) clamp(96px,11vw,132px) minmax(0,1fr); align-items:center; background:#f1f8fb; border-bottom:1px solid #e1edf3;">
+              <div style="text-align:center; padding:15px 12px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(14px,1.6vw,18px); line-height:1.2; color:#122a3a; white-space:pre-line;">{scLeftTitle}</div>
+              <div style="text-align:center; padding:15px 4px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:800; font-size:clamp(15px,1.8vw,19px); color:#2e9fc0; letter-spacing:.02em;">VS</div>
+              <div style="text-align:center; padding:15px 12px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(14px,1.6vw,18px); line-height:1.2; color:#122a3a; white-space:pre-line;">{scRightTitle}</div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:minmax(0,1fr) clamp(96px,11vw,132px) minmax(0,1fr); border-bottom:1px solid #e1edf3;">
+              <div style="padding:clamp(14px,2vw,22px); display:flex; flex-direction:column; align-items:center;">{scImgMiniIncision}<p style="font-size:13.5px; line-height:1.5; color:#445d6e; text-align:center; margin:13px 0 0; white-space:pre-line;">{scIncisionLeft}</p></div>
+              <div style="display:flex; align-items:center; justify-content:center; text-align:center; padding:10px 6px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(12.5px,1.4vw,15px); line-height:1.25; color:#33506a; background:#fafdfe; border-left:1px solid #eef3f6; border-right:1px solid #eef3f6;">切開部位</div>
+              <div style="padding:clamp(14px,2vw,22px); display:flex; flex-direction:column; align-items:center;">{scImgFullIncision}<p style="font-size:13.5px; line-height:1.5; color:#445d6e; text-align:center; margin:13px 0 0; white-space:pre-line;">{scIncisionRight}</p></div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:minmax(0,1fr) clamp(96px,11vw,132px) minmax(0,1fr); border-bottom:1px solid #e1edf3;">
+              <div style="padding:clamp(14px,2vw,22px); display:flex; flex-direction:column; align-items:center;">{scImgMiniDissection}<div style="display:flex; flex-wrap:wrap; gap:14px; justify-content:center; margin-top:13px;"><span style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:#5a7488;"><span style="width:13px; height:13px; border-radius:3px; background:#67b48a; flex:none;"></span>皮膚剥離範囲</span><span style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:#5a7488;"><span style="width:13px; height:13px; border-radius:3px; background:#eaa238; flex:none;"></span>SMAS層剥離範囲</span></div></div>
+              <div style="display:flex; align-items:center; justify-content:center; text-align:center; padding:10px 6px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(12.5px,1.4vw,15px); line-height:1.25; color:#33506a; background:#fafdfe; border-left:1px solid #eef3f6; border-right:1px solid #eef3f6;">剥離範囲</div>
+              <div style="padding:clamp(14px,2vw,22px); display:flex; flex-direction:column; align-items:center;">{scImgFullDissection}<div style="display:flex; flex-wrap:wrap; gap:14px; justify-content:center; margin-top:13px;"><span style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:#5a7488;"><span style="width:13px; height:13px; border-radius:3px; background:#67b48a; flex:none;"></span>皮膚剥離範囲</span><span style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:#5a7488;"><span style="width:13px; height:13px; border-radius:3px; background:#eaa238; flex:none;"></span>SMAS層剥離範囲</span></div></div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:minmax(0,1fr) clamp(96px,11vw,132px) minmax(0,1fr); border-bottom:1px solid #e1edf3;">
+              <div style="padding:18px 16px; text-align:center; font-size:15px; line-height:1.55; color:#445d6e; align-self:center; white-space:pre-line;">{scAgeLeft}</div>
+              <div style="display:flex; align-items:center; justify-content:center; text-align:center; padding:12px 6px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(12.5px,1.4vw,15px); line-height:1.25; color:#33506a; background:#fafdfe; border-left:1px solid #eef3f6; border-right:1px solid #eef3f6;">対象年齢</div>
+              <div style="padding:18px 16px; text-align:center; font-size:15px; line-height:1.55; color:#445d6e; align-self:center; white-space:pre-line;">{scAgeRight}</div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:minmax(0,1fr) clamp(96px,11vw,132px) minmax(0,1fr); border-bottom:1px solid #e1edf3;">
+              <div style="padding:18px 16px; text-align:center; font-size:14.5px; line-height:1.6; color:#445d6e; align-self:center; white-space:pre-line;">{scLiftLeft}</div>
+              <div style="display:flex; align-items:center; justify-content:center; text-align:center; padding:12px 6px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(12.5px,1.4vw,15px); line-height:1.25; color:#33506a; background:#fafdfe; border-left:1px solid #eef3f6; border-right:1px solid #eef3f6;">引き上げ効果</div>
+              <div style="padding:18px 16px; text-align:center; font-size:14.5px; line-height:1.6; color:#445d6e; align-self:center; white-space:pre-line;">{scLiftRight}</div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:minmax(0,1fr) clamp(96px,11vw,132px) minmax(0,1fr);">
+              <div style="padding:18px 16px; text-align:center; font-size:14.5px; line-height:1.6; color:#445d6e; align-self:center; white-space:pre-line;">{scCandLeft}</div>
+              <div style="display:flex; align-items:center; justify-content:center; text-align:center; padding:12px 6px; font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(12.5px,1.4vw,15px); line-height:1.25; color:#33506a; background:#fafdfe; border-left:1px solid #eef3f6; border-right:1px solid #eef3f6;">適応対象</div>
+              <div style="padding:18px 16px; text-align:center; font-size:14.5px; line-height:1.6; color:#445d6e; align-self:center; white-space:pre-line;">{scCandRight}</div>
+            </div>
+
+          </div>
+        </section>
+        </>)}
+
+        {hasSurgMethods && (<>
+        <section style="margin-bottom:44px;">
+          <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.2; letter-spacing:-.01em; margin:0 0 26px;">{smHeading}</h2>
+          <div style="display:flex; flex-direction:column; gap:clamp(30px,4vw,48px);">
+            {smItems.map((m) => (<>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(24px,3vw,42px); align-items:start;">
+                <div style="border-radius:18px; overflow:hidden; border:1px solid #e6edf2; background:#fff; white-space:pre-line;"><Fragment set:html={m.imgEl} /></div>
+                <div>
+                  <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(19px,2.1vw,23px); line-height:1.25; letter-spacing:-.01em; margin:0 0 14px; color:#122a3a; white-space:pre-line;">{m.title}</h3>
+                  <div style="height:2px; background:#122a3a; width:100%; margin:0 0 18px;"></div>
+                  {m.paras.map((para) => (<>
+                    <p style="font-size:16px; line-height:1.72; color:#445d6e; margin:0 0 14px; white-space:pre-line;">{para.text}</p>
+                  </>))}
+                  {m.groups.map((g) => (<>
+                    <div style="margin-top:18px;">
+                      <div style={`font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:14px; letter-spacing:.02em; text-transform:uppercase; color:${g.color}; margin:0 0 12px; white-space:pre-line;`}>{g.label}</div>
+                      <div style="display:flex; flex-direction:column; gap:10px;">
+                        {g.items.map((it) => (<>
+                          <div style="display:flex; gap:11px; align-items:flex-start;">
+                            <Icon name={g.iconName} style={`font-size:20px; color:${g.iconColor}; flex:none; margin-top:1px;`} />
+                            <p style="font-size:15.5px; line-height:1.6; color:#445d6e; margin:0; white-space:pre-line;">{it.text}</p>
+                          </div>
+                        </>))}
+                      </div>
+                    </div>
+                  </>))}
+                </div>
+              </div>
+            </>))}
+          </div>
+        </section>
+        </>)}
+
+        <section style="margin-bottom:44px;">
+          <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,28px); line-height:1.18; letter-spacing:-.01em; margin:0 0 16px;">メリット</h2>
+          {hasBenefits && (<>
+            <div style="display:flex; flex-direction:column; gap:30px;">
+              {benefitGroups.map((g) => (<>
+                <div>
+                  {g.title && (<>
+                  <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(17px,1.9vw,20px); line-height:1.25; margin:0 0 14px; white-space:pre-line;">{g.title}</h3>
+                  </>)}
+                  <div style="display:flex; flex-direction:column; gap:14px;">
+                    {g.items.map((b) => (<>
+                      <div style="display:flex; gap:14px; align-items:flex-start;">
+                        <Icon name="circle-check" style="font-size:22px; color:#2e9fc0; flex:none; margin-top:1px;" />
+                        <p style="font-size:16px; line-height:1.65; color:#445d6e; margin:0; white-space:pre-line;">{b.text}</p>
+                      </div>
+                    </>))}
+                  </div>
+                </div>
+              </>))}
+            </div>
+          </>)}
+          {noBenefits && (<>
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <div style="display:flex; gap:14px; align-items:flex-start;">
+                <Icon name="circle-check" style="font-size:22px; color:#2e9fc0; flex:none; margin-top:1px;" />
+                <p style="font-size:16px; line-height:1.65; color:#445d6e; margin:0;">写真での診断を含む詳細なカウンセリングと、誠実なご提案。 <span style="color:#9aabb6;">（仮）</span></p>
+              </div>
+              <div style="display:flex; gap:14px; align-items:flex-start;">
+                <Icon name="circle-check" style="font-size:22px; color:#2e9fc0; flex:none; margin-top:1px;" />
+                <p style="font-size:16px; line-height:1.65; color:#445d6e; margin:0;">ご契約前の、隠れた費用のない明瞭なお見積もり。 <span style="color:#9aabb6;">（仮）</span></p>
+              </div>
+              <div style="display:flex; gap:14px; align-items:flex-start;">
+                <Icon name="circle-check" style="font-size:22px; color:#2e9fc0; flex:none; margin-top:1px;" />
+                <p style="font-size:16px; line-height:1.65; color:#445d6e; margin:0;">回復に合わせた通訳・送迎・術後ケアの手配。 <span style="color:#9aabb6;">（仮）</span></p>
+              </div>
+            </div>
+          </>)}
+        </section>
+
+      
+        {hasSiblings && (<>
+        <section>
+          <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(20px,2.2vw,24px); line-height:1.2; letter-spacing:-.01em; margin:0 0 18px;">関連施術</h2>
+          <div style="display:flex; flex-wrap:wrap; gap:11px;">
+            {siblings.map((s) => (<>
+              <a href={`/procedures/${s.slug}/`} class="sib">{s.name} <Icon name="arrow-right" style="font-size:15px;" /></a>
+            </>))}
+          </div>
+        </section>
+        </>)}
+      </article>
+
+    
+      <aside style="position:sticky; top:96px; background:#fff; border:1px solid #e1edf3; border-radius:22px; padding:26px 26px 24px; box-shadow:0 1px 2px rgba(16,41,61,.04);">
+        <div style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:18px; margin:0 0 18px;">基本情報</div>
+        <div style="display:flex; flex-direction:column; gap:0;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:14px; padding:13px 0; border-bottom:1px solid #eef4f7;">
+            <span style="display:inline-flex; align-items:center; gap:9px; font-size:14px; color:#5a7488; font-weight:500;"><Icon name="clock" style="font-size:17px; color:#2e9fc0;" /> 施術時間</span>
+            <span style="font-size:14px; font-weight:600; color:#122a3a; text-align:right; white-space:pre-line;">{factDuration}</span>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:14px; padding:13px 0; border-bottom:1px solid #eef4f7;">
+            <span style="display:inline-flex; align-items:center; gap:9px; font-size:14px; color:#5a7488; font-weight:500;"><Icon name="moon" style="font-size:17px; color:#2e9fc0;" /> 麻酙</span>
+            <span style="font-size:14px; font-weight:600; color:#122a3a; text-align:right; white-space:pre-line;">{factAnesthesia}</span>
+          </div>
+          <div style="padding:13px 0; border-bottom:1px solid #eef4f7;">
+            <span style="display:inline-flex; align-items:center; gap:9px; font-size:14px; color:#5a7488; font-weight:500; margin-bottom:10px;"><Icon name="calendar" style="font-size:17px; color:#2e9fc0;" /> 韓国滞在に必要な日数</span>
+            {hasStaySchedule && (<>
+              <div style="display:flex; flex-direction:column; gap:7px; margin-top:4px;">
+                {stayRows.map((s) => (<>
+                  <div style="display:flex; align-items:baseline; gap:10px;">
+                    <span style="flex:none; min-width:46px; font-size:12px; font-weight:700; color:var(--accent); letter-spacing:.02em; white-space:pre-line;">{s.day}</span>
+                    <span style="font-size:13.5px; font-weight:600; color:#122a3a; white-space:pre-line;">{s.label}</span>
+                  </div>
+                </>))}
+              </div>
+            </>)}
+            {hasStayNote && (<>
+              <div style="margin-top:11px; font-size:12px; line-height:1.55; color:#5a7488; font-style:italic;">* {stayNote}</div>
+            </>)}
+          </div>
+          <div style="padding:13px 0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:14px;">
+              <span style="display:inline-flex; align-items:center; gap:9px; font-size:14px; color:#5a7488; font-weight:500;"><Icon name="banknote" style="font-size:17px; color:#2e9fc0;" /> 価格帯</span>
+              <span style="font-size:14px; font-weight:700; color:#122a3a; text-align:right; white-space:pre-line;">{factPrice}</span>
+            </div>
+            {factPriceNote && (<>
+              <div style="margin-top:6px; text-align:right; font-size:12px; color:#9aabb6; font-style:italic; white-space:pre-line;">{factPriceNote}</div>
+            </>)}
+          </div>
+        </div>
+        {noFacts && (<>
+          <div style="font:600 10.5px/1.5 ui-monospace,Menlo,monospace; letter-spacing:.1em; color:#b6c4cd; text-transform:uppercase; margin-top:16px; text-align:center;">詳細は確認中です</div>
+        </>)}
+        <a href="https://lin.ee/3KJTZXJ" style="display:flex; align-items:center; justify-content:center; gap:9px; margin-top:18px; background:var(--accent); color:#fff; font-weight:700; font-size:15px; padding:14px 20px; border-radius:12px;">
+          <Icon name="message-circle" style="font-size:18px;" /> 見積もりを取る
+        </a>
+      </aside>
+    </main>
+
+  
+    <Footer variant="back" backHref={`/surgeries/${catSlug}/`} backLabel={`${catName}に戻る`} />
+
+  </div>
+
+</Base>

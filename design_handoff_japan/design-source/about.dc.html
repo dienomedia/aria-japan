@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<style>
+  :root{ --accent:#FF7A4D; }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{ background:#eef6fa; }
+  a{ text-decoration:none; color:inherit; }
+  .ph{ position:relative; overflow:hidden; background:repeating-linear-gradient(135deg,#dbe8ef 0 11px,#e9f2f7 11px 22px); }
+  .ph > .ph-l{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:10px; font:600 11px/1.5 ui-monospace,Menlo,monospace; letter-spacing:.1em; color:#7d99a8; text-transform:uppercase; }
+  .navlink{ position:relative; }
+  .navlink:after{ content:""; position:absolute; left:0; bottom:-6px; height:2px; width:0; background:var(--accent); transition:width .25s ease; }
+  .navlink:hover:after{ width:100%; }
+  [data-lucide]{ width:1em; height:1em; }
+  /* ---- Surgeries nav mega-menu (identical behavior across pages) ---- */
+  .nav-surg{ position:relative; }
+  .surg-mega{ position:absolute; top:100%; left:50%; transform:translateX(-50%); padding-top:16px; opacity:0; visibility:hidden; transition:opacity .2s ease; z-index:60; pointer-events:none; }
+  .nav-surg.open .surg-mega{ opacity:1; visibility:visible; pointer-events:auto; }
+  .surg-mega-inner{ position:relative; min-width:300px; background:#fff; border:1px solid #e1edf3; border-radius:18px; box-shadow:0 34px 70px -24px rgba(16,41,61,.45); padding:10px; }
+  .surg-cat{ position:relative; }
+  .surg-cat-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:11px 15px; border-radius:11px; color:#122a3a; font-weight:600; font-size:14.5px; cursor:pointer; transition:background .15s ease, color .15s ease; }
+  .surg-cat:hover .surg-cat-row{ background:#f0f6f9; color:var(--accent); }
+  .surg-cat-row .chev{ opacity:.4; transition:transform .15s ease, opacity .15s ease; }
+  .surg-cat:hover .surg-cat-row .chev{ opacity:1; transform:translateX(3px); color:var(--accent); }
+  .surg-sub{ position:absolute; left:100%; top:0; padding-left:14px; opacity:0; visibility:hidden; transform:translateX(6px); transition:opacity .18s ease, transform .18s ease; pointer-events:none; }
+  .surg-cat:hover .surg-sub{ opacity:1; visibility:visible; transform:translateX(0); pointer-events:auto; }
+  .surg-sub-inner{ min-width:288px; max-width:330px; background:#fff; border:1px solid #e1edf3; border-radius:18px; box-shadow:0 34px 70px -24px rgba(16,41,61,.45); padding:18px 18px 14px; }
+  .surg-proc{ display:block; padding:8px 11px; border-radius:9px; font-size:13.5px; font-weight:500; color:#3f6075; transition:background .14s ease, color .14s ease; }
+  .surg-proc:hover{ background:#f0f6f9; color:var(--accent); }
+  /* ---- Language switcher ---- */
+  .nav-lang{ position:relative; }
+  .lang-btn{ display:inline-flex; align-items:center; gap:7px; background:#f0f6f9; border:1px solid #dceaf1; padding:7px 11px 7px 9px; border-radius:999px; cursor:pointer; color:#122a3a; font:inherit; line-height:0; }
+  .lang-btn:hover{ background:#e6f1f6; }
+  .lang-btn .lang-chev{ transition:transform .2s ease; }
+  .nav-lang.open .lang-btn .lang-chev{ transform:rotate(180deg); }
+  .lang-menu{ position:absolute; top:100%; right:0; margin-top:14px; min-width:188px; background:#fff; border:1px solid #e1edf3; border-radius:14px; box-shadow:0 34px 70px -24px rgba(16,41,61,.45); padding:7px; opacity:0; visibility:hidden; transform:translateY(-8px); transition:opacity .18s ease, transform .18s ease; z-index:70; }
+  .nav-lang.open .lang-menu{ opacity:1; visibility:visible; transform:translateY(0); }
+  .lang-item{ display:flex; align-items:center; gap:11px; padding:9px 12px; border-radius:10px; font-size:14px; font-weight:600; color:#122a3a; cursor:pointer; transition:background .14s ease; }
+  .lang-item:hover{ background:#f0f6f9; }
+  .lang-flag{ width:24px; height:16px; border-radius:3px; flex:none; box-shadow:0 0 0 1px rgba(16,41,61,.12); display:block; }
+</style>
+</helmet>
+
+<div style="font-family:'Noto Sans JP',system-ui,sans-serif; color:#122a3a; background:#eef6fa; min-height:100vh; -webkit-font-smoothing:antialiased; display:flex; flex-direction:column;">
+  <div aria-label="SNS" style="position:fixed; right:clamp(14px,2vw,26px); bottom:clamp(18px,3vw,30px); z-index:80; display:flex; flex-direction:column; gap:10px;">
+    <a href="https://x.com/_Ariajapan" target="_blank" rel="noopener" aria-label="X" style="width:50px; height:50px; border-radius:50%; background:#000000; color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 24px -10px rgba(16,41,61,.55); transition:transform .2s ease;" style-hover="transform:translateY(-3px);"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px; height:20px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    <a href="https://www.instagram.com/ariacorp_japan" target="_blank" rel="noopener" aria-label="Instagram" style="width:50px; height:50px; border-radius:50%; background:linear-gradient(45deg,#f9a33b 0%,#e1306c 50%,#833ab4 100%); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 24px -10px rgba(16,41,61,.55); transition:transform .2s ease;" style-hover="transform:translateY(-3px);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px; height:22px;"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+    <a href="https://lin.ee/3KJTZXJ" target="_blank" rel="noopener" aria-label="LINE" style="width:50px; height:50px; border-radius:50%; background:#06C755; color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 24px -10px rgba(16,41,61,.55); transition:transform .2s ease;" style-hover="transform:translateY(-3px);"><svg viewBox="0 0 24 24" fill="currentColor" style="width:26px; height:26px;"><path d="M12 2.5C6.48 2.5 2 6.12 2 10.58c0 4 3.55 7.35 8.35 7.98.32.07.77.21.88.49.1.25.07.65.03.9l-.14.85c-.04.25-.2.98.86.53 1.06-.45 5.73-3.37 7.82-5.78C21.24 14 22 12.38 22 10.58 22 6.12 17.52 2.5 12 2.5zM8.1 12.96H6.11a.53.53 0 0 1-.53-.53V8.46a.53.53 0 1 1 1.06 0v3.44H8.1a.53.53 0 1 1 0 1.06zm2.05-.53a.53.53 0 1 1-1.06 0V8.46a.53.53 0 1 1 1.06 0zm4.79 0a.53.53 0 0 1-.95.32l-2.04-2.78v2.46a.53.53 0 1 1-1.06 0V8.46a.53.53 0 0 1 .95-.32l2.04 2.78V8.46a.53.53 0 1 1 1.06 0zm3.21-2.51a.53.53 0 1 1 0 1.06h-1.46v.92h1.46a.53.53 0 1 1 0 1.06h-1.99a.53.53 0 0 1-.53-.53V8.46c0-.29.24-.53.53-.53h1.99a.53.53 0 1 1 0 1.06h-1.46v.93z"/></svg></a>
+  </div>
+
+
+  <!-- Nav (About active · identical Surgeries mega-menu) -->
+  <nav style="background:#fff; border-bottom:1px solid #e1edf3; position:sticky; top:0; z-index:40;">
+    <div style="max-width:1320px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:18px clamp(20px,5vw,72px);">
+      <a href="Aria%20Korea%20Homepage.dc.html" style="display:flex; align-items:center;">
+        <img src="assets/aria-logo-navy-trim.png" alt="Ariacorporation" style="height:28px; width:auto; display:block;">
+      </a>
+      <div style="display:flex; align-items:center; gap:32px;">
+        <a href="about.dc.html" class="navlink" style="font-weight:600; font-size:15px; color:var(--accent);">会社概要</a>
+        <div class="nav-surg {{ surgClass }}" onMouseEnter="{{ onSurgEnter }}" onMouseLeave="{{ onSurgLeave }}">
+          <a href="Aria%20Korea%20Homepage.dc.html#surgeries" class="navlink" style="display:inline-flex; align-items:center; gap:5px; font-weight:600; font-size:15px; color:#122a3a;">施術一覧 <i data-lucide="chevron-down" style="font-size:16px;"></i></a>
+          <div class="surg-mega">
+            <div class="surg-mega-inner">
+              <sc-for list="{{ cats }}" as="c" hint-placeholder-count="10">
+                <div class="surg-cat">
+                  <a href="surgery-category.dc.html?cat={{ c.slug }}" class="surg-cat-row">
+                    <span>{{ c.name }}</span>
+                    <i data-lucide="chevron-right" class="chev" style="font-size:16px;"></i>
+                  </a>
+                  <div class="surg-sub">
+                    <div class="surg-sub-inner">
+                      <a href="surgery-category.dc.html?cat={{ c.slug }}" style="display:flex; align-items:center; justify-content:space-between; gap:14px; padding:0 11px 12px; margin-bottom:6px; border-bottom:1px solid #eef4f7;">
+                        <span style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:15px; color:#122a3a;">{{ c.name }}</span>
+                        <span style="display:inline-flex; align-items:center; gap:5px; font-size:12.5px; font-weight:700; color:var(--accent); white-space:nowrap;">概要を見る <i data-lucide="arrow-up-right" style="font-size:14px;"></i></span>
+                      </a>
+                      <sc-for list="{{ c.procedures }}" as="p" hint-placeholder-count="6">
+                        <a href="procedure.dc.html?proc={{ p.slug }}" class="surg-proc">{{ p.name }}</a>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <a href="Aria%20Korea%20Homepage.dc.html#services" class="navlink" style="font-weight:600; font-size:15px; color:#122a3a;">サービス</a>
+        <a href="Aria%20Korea%20Homepage.dc.html#story" class="navlink" style="font-weight:600; font-size:15px; color:#122a3a;">私たちの物語</a>
+        <a href="blog.dc.html" class="navlink" style="font-weight:600; font-size:15px; color:#122a3a;">ブログ</a>
+        <div class="nav-lang {{ langClass }}">
+          <button type="button" class="lang-btn" onClick="{{ onLangToggle }}" aria-label="Change language">
+            <svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><circle cx="12" cy="8" r="4" fill="#BC002D"/></svg>
+            <i data-lucide="chevron-down" class="lang-chev" style="width:15px; height:15px;"></i>
+          </button>
+          <div class="lang-menu">
+            <a href="#" class="lang-item" data-lang="ko"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><circle cx="12" cy="8" r="3.5" fill="#CD2E3A"/><path d="M12 4.5a3.5 3.5 0 0 0 0 7 1.75 1.75 0 0 0 0-3.5 1.75 1.75 0 0 1 0-3.5z" fill="#0047A0"/></svg> 한국어</a>
+            <a href="#" class="lang-item" data-lang="en"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><g fill="#B22234"><rect width="24" height="1.23" y="0"/><rect width="24" height="1.23" y="2.46"/><rect width="24" height="1.23" y="4.92"/><rect width="24" height="1.23" y="7.38"/><rect width="24" height="1.23" y="9.84"/><rect width="24" height="1.23" y="12.3"/><rect width="24" height="1.23" y="14.77"/></g><rect width="10" height="8.6" fill="#3C3B6E"/></svg> English</a>
+            <a href="#" class="lang-item" data-lang="zh-cn"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#DE2910"/><path d="M4.5 3 5.2 5.1 7.4 5.1 5.6 6.4 6.3 8.5 4.5 7.2 2.7 8.5 3.4 6.4 1.6 5.1 3.8 5.1z" fill="#FFDE00"/><circle cx="9" cy="2.4" r=".7" fill="#FFDE00"/><circle cx="10.4" cy="4" r=".7" fill="#FFDE00"/><circle cx="10.4" cy="6.2" r=".7" fill="#FFDE00"/><circle cx="9" cy="7.8" r=".7" fill="#FFDE00"/></svg> 中文（简体）</a>
+            <a href="#" class="lang-item" data-lang="zh-tw"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#FE0000"/><rect width="12" height="8" fill="#000095"/><circle cx="6" cy="4" r="2.6" fill="#fff"/><circle cx="6" cy="4" r="1.5" fill="#000095"/></svg> 繁體中文</a>
+          </div>
+        </div>
+        <a href="https://lin.ee/3KJTZXJ" style="display:inline-flex; align-items:center; gap:9px; background:var(--accent); color:#fff; font-weight:700; font-size:14.5px; padding:11px 19px; border-radius:999px;">
+          <i data-lucide="message-circle" style="font-size:17px;"></i> LINEで予約
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Intro: company main statement -->
+  <header style="background:linear-gradient(180deg,#eef6fa 0%,#ffffff 100%); border-bottom:1px solid #e1edf3;">
+    <div style="max-width:1000px; margin:0 auto; padding:clamp(48px,7vw,104px) clamp(20px,5vw,72px);">
+      <div style="font:700 13px/1 'Noto Sans JP'; letter-spacing:.14em; text-transform:uppercase; color:#2e9fc0; margin-bottom:18px;">アリアコーポレーションについて</div>
+      <h1 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:800; font-size:clamp(34px,5vw,62px); line-height:1.05; letter-spacing:-.02em; margin:0 0 28px; max-width:880px;">韓国への旅をご一緒に、信頼できるパートナー</h1>
+      <p style="font-size:clamp(17px,1.7vw,21px); line-height:1.7; color:#445d6e; margin:0 0 20px; max-width:760px;">私のキャリアは韓国での俳優活動から始まり、多くの韓国ドラマに出演する中で韓国の美容や韓国文化への深い理解を得ました。この経験を通じて自然と海外の友人たちとつながり、グローバル観光産業に深く関わるようになりました。この道のりが、メディカルツーリズム専門エージェンシーであるAria Corporationの設立につながりました。</p>
+      <p style="font-size:clamp(16px,1.5vw,18px); line-height:1.7; color:#445d6e; margin:0 0 20px; max-width:720px;">韓国のトップクラスクリニックを訪れる海外患者様のために、通訳・移動サポート・予約調整・観光を含む全体的なサポートで、海外での不安を取り除くことに尽力しています。</p>
+      <p style="font-size:clamp(16px,1.5vw,18px); line-height:1.7; color:#5a7488; margin:0; max-width:720px;">政府認可のメディカルコンシェルジュとして、患者様の安全、透明で合理的な価格、専任体制の継続的なケアをすべての中心に据えています。</p>
+    </div>
+  </header>
+
+  <!-- Government-Licensed Agency -->
+  <main style="flex:1;">
+    <section style="background:#f7fbfd; border-bottom:1px solid #e1edf3;">
+      <div style="max-width:1180px; margin:0 auto; padding:clamp(48px,6vw,96px) clamp(20px,5vw,72px);">
+        <div style="font:700 13px/1 'Noto Sans JP'; letter-spacing:.14em; text-transform:uppercase; color:#2e9fc0; margin-bottom:14px;">政府認可エージェンシー</div>
+        <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:800; font-size:clamp(28px,3.4vw,44px); line-height:1.1; letter-spacing:-.02em; margin:0 0 16px; max-width:760px;">すべての患者様を支える、2つの公式ライセンス</h2>
+        <p style="font-size:clamp(16px,1.5vw,18px); line-height:1.7; color:#5a7488; margin:0 0 clamp(36px,4vw,56px); max-width:680px;">Aria Corporationは、患者様を保護し、韓国のトップクラスのクリニックと直接連携できる2つの政府ライセンスを保有しています。</p>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:clamp(28px,3vw,44px);">
+          <!-- License 1 -->
+          <div style="background:#fff; border:1px solid #e1edf3; border-radius:24px; overflow:hidden; box-shadow:0 24px 50px -34px rgba(16,41,61,.4);">
+            <div style="aspect-ratio:4/3; background:#f1f6f9; display:flex; align-items:center; justify-content:center; padding:18px;"><img src="assets/license-international-patients.png" alt="외국인환자 유치업자 등록증 — Licensed for Attracting International Patients" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:6px; box-shadow:0 8px 24px -12px rgba(16,41,61,.35);"></div>
+            <div style="padding:clamp(24px,3vw,34px);">
+              <div style="display:inline-flex; align-items:center; gap:7px; background:#fff1eb; color:var(--accent); font-weight:700; font-size:12px; letter-spacing:.04em; text-transform:uppercase; padding:6px 12px; border-radius:999px; margin-bottom:16px;"><i data-lucide="shield-check" style="font-size:15px;"></i> 患者保護</div>
+              <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(20px,2.2vw,25px); line-height:1.2; margin:0 0 14px;">外国人患者誘致業者登録証（国際患者誘致ライセンス）</h3>
+              <p style="font-size:15.5px; line-height:1.7; color:#445d6e; margin:0;">これは、韓国で美容整形手術を希望する海外患者様に専門的に対応するために最も重要なライセンスです。認可エージェンシーであることにより、万一医療事故が発生した場合でも、患者様は最大、1億ウォンまでの保険適用を受けられます。さらに、このライセンスにより当社は患者様の公式代理人として、韓国のクリニックとの安全で円滑なコミュニケーション・交渉を代行できます。</p>
+            </div>
+          </div>
+
+          <!-- License 2 -->
+          <div style="background:#fff; border:1px solid #e1edf3; border-radius:24px; overflow:hidden; box-shadow:0 24px 50px -34px rgba(16,41,61,.4);">
+            <div style="aspect-ratio:4/3; background:#f1f6f9; display:flex; align-items:center; justify-content:center; padding:18px;"><img src="assets/license-culture-arts.png" alt="대중문화예술기획업 등록증 — Licensed for Public Culture & Arts Planning" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:6px; box-shadow:0 8px 24px -12px rgba(16,41,61,.35);"></div>
+            <div style="padding:clamp(24px,3vw,34px);">
+              <div style="display:inline-flex; align-items:center; gap:7px; background:#fff1eb; color:var(--accent); font-weight:700; font-size:12px; letter-spacing:.04em; text-transform:uppercase; padding:6px 12px; border-radius:999px; margin-bottom:16px;"><i data-lucide="star" style="font-size:15px;"></i> 芸能人・インフルエンサーネットワーク</div>
+              <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:clamp(20px,2.2vw,25px); line-height:1.2; margin:0 0 14px;">大衆文化芸術企画業登録証（公行文化芸術企画業ライセンス）</h3>
+              <p style="font-size:15.5px; line-height:1.7; color:#445d6e; margin:0;">このライセンスは、芸能人など公人を起用したプロモーション活動を行う際に不可欠です。元芸能人であるCEOの広いネットワークを活かし、提携クリニックのための芸能人タイアップやインフルエンサーマーケティングキャンペーンを積極的に展開しています。この結果、Aria Corporationはクライアント様のために特別な特典やプレミアムサービスを交渉できる強力なパートナーとしての地位を確立しています。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#fff; border-bottom:1px solid #e1edf3;">
+      <div style="max-width:1180px; margin:0 auto; padding:clamp(48px,6vw,96px) clamp(20px,5vw,72px); display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:clamp(36px,4vw,64px); align-items:start;">
+        <!-- Portrait -->
+        <div style="position:sticky; top:96px;">
+          <div class="ph" style="aspect-ratio:4/4.6; border-radius:24px; min-height:360px; box-shadow:0 30px 60px -30px rgba(16,41,61,.4); background:#0e2738;"><img src="assets/ceo-cha-soonhyung.png" alt="Cha Soon-hyung — Founder & CEO" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 20%;"></div>
+        </div>
+        <!-- Bio -->
+        <div>
+          <div style="font:700 13px/1 'Noto Sans JP'; letter-spacing:.14em; text-transform:uppercase; color:#2e9fc0; margin-bottom:14px;">创業者・CEO</div>
+          <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:800; font-size:clamp(30px,3.6vw,46px); line-height:1.08; letter-spacing:-.02em; margin:0 0 8px;">Cha SoonHyung</h2>
+          <div style="font-size:15px; font-weight:600; color:#5a7488; margin-bottom:26px;">Aria Corporation 創業者・CEO</div>
+
+          <p style="font-size:17px; line-height:1.75; color:#445d6e; margin:0 0 18px;">チャ・スンヒョンはAria Corporationを設立する前、「ミスターサンシャイン」「一々は名を向ける」「信者」「神の一手」「パイド・パイパー」「モンスター」などの人気映画・ドラマに出演し、韓国俳優として確たるキャリアを築きました。俳優活動の後、国際マーケティングプロダクション会社を設立し、aespa、ATEEZ、TWICEなどトップクラスK-POPアーティストのグローバルプロモーションプロジェクトを手がけました。</p>
+          <p style="font-size:17px; line-height:1.75; color:#445d6e; margin:0 0 18px;">このキャリアを通じて彼は、外見や自信、こまやかなケアが人の人生をどれほど変えうるか、そして本当に信頼できる人に導いてもらうことがどれほど重要かを、自らの経験として学びました。</p>
+          <p style="font-size:17px; line-height:1.75; color:#445d6e; margin:0 0 32px;">彼はその同じレベルの専門性と丁寧なケアを海外患者様にも届けるため、Aria Corporationを立ち上げました。私たちは患者様の安全を最優先すること、最も合理的な価格をご提供すること、そして韓国滞在中は常に専任スタッフが寄り添うこと、この3つの柱を大切にしています。ご到着から完全な回復まで、すべての患者様に本当に大切にされていると感じていただけるよう尽力します。</p>
+
+          <!-- Acting career media -->
+          <div style="background:#f7fbfd; border:1px solid #e1edf3; border-radius:22px; padding:clamp(22px,3vw,32px);">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+              <i data-lucide="clapperboard" style="font-size:20px; color:var(--accent);"></i>
+              <h3 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:700; font-size:20px; margin:0;">スクリーンでの活躍</h3>
+            </div>
+            <p style="font-size:15px; line-height:1.65; color:#5a7488; margin:0 0 22px;">チャ・スンヒョンの俳優キャリアのハイライト。動画やスクリーンショットは今後追加予定です。</p>
+
+            <!-- Video: poster + watch on YouTube -->
+            <a href="https://youtu.be/-3dKkcFrytg" target="_blank" rel="noopener" style="position:relative; display:block; aspect-ratio:16/9; border-radius:16px; overflow:hidden; margin-bottom:16px; background:#0e2738;">
+              <img src="https://img.youtube.com/vi/-3dKkcFrytg/hqdefault.jpg" alt="Cha Soon-hyung — acting career clip" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+              <span style="position:absolute; inset:0; background:linear-gradient(180deg,rgba(14,39,56,.05),rgba(14,39,56,.45));"></span>
+              <span style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+                <span style="width:66px; height:66px; border-radius:999px; background:rgba(255,255,255,.92); display:flex; align-items:center; justify-content:center; box-shadow:0 12px 30px -10px rgba(16,41,61,.5);">
+                  <i data-lucide="play" style="font-size:26px; color:var(--accent);"></i>
+                </span>
+              </span>
+              <span style="position:absolute; left:14px; bottom:12px; display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:700; color:#fff; text-shadow:0 1px 4px rgba(0,0,0,.5);"><i data-lucide="external-link" style="font-size:14px;"></i> YouTubeで見る</span>
+            </a>
+
+            <!-- Screenshots gallery (landscape stills) -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;">
+              <figure style="margin:0; position:relative; aspect-ratio:16/9; border-radius:12px; overflow:hidden; background:#0e2738;">
+                <img src="assets/still-mr-sunshine.jpg" alt="Mr. Sunshine" loading="lazy" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+                <figcaption style="position:absolute; left:0; right:0; bottom:0; padding:18px 12px 8px; font-size:12px; font-weight:700; color:#fff; background:linear-gradient(180deg,transparent,rgba(14,39,56,.8));">Mr. Sunshine</figcaption>
+              </figure>
+              <figure style="margin:0; position:relative; aspect-ratio:16/9; border-radius:12px; overflow:hidden; background:#0e2738;">
+                <img src="assets/still-monster-1.jpg" alt="Monster" loading="lazy" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+                <figcaption style="position:absolute; left:0; right:0; bottom:0; padding:18px 12px 8px; font-size:12px; font-weight:700; color:#fff; background:linear-gradient(180deg,transparent,rgba(14,39,56,.8));">Monster</figcaption>
+              </figure>
+              <figure style="margin:0; position:relative; aspect-ratio:16/9; border-radius:12px; overflow:hidden; background:#0e2738;">
+                <img src="assets/still-monster-2.jpg" alt="Monster — Chinese-language scene" loading="lazy" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+                <figcaption style="position:absolute; left:0; right:0; bottom:0; padding:18px 12px 8px; font-size:12px; font-weight:700; color:#fff; background:linear-gradient(180deg,transparent,rgba(14,39,56,.8));">Monster</figcaption>
+              </figure>
+              <figure style="margin:0; position:relative; aspect-ratio:16/9; border-radius:12px; overflow:hidden; background:#0e2738;">
+                <img src="assets/still-night-light.jpg" alt="Night Light" loading="lazy" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+                <figcaption style="position:absolute; left:0; right:0; bottom:0; padding:18px 12px 8px; font-size:12px; font-weight:700; color:#fff; background:linear-gradient(180deg,transparent,rgba(14,39,56,.8));">Night Light</figcaption>
+              </figure>
+              <figure style="margin:0; position:relative; aspect-ratio:16/9; border-radius:12px; overflow:hidden; background:#0e2738;">
+                <img src="assets/still-chicago-typewriter.jpg" alt="Chicago Typewriter" loading="lazy" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+                <figcaption style="position:absolute; left:0; right:0; bottom:0; padding:18px 12px 8px; font-size:12px; font-weight:700; color:#fff; background:linear-gradient(180deg,transparent,rgba(14,39,56,.8));">Chicago Typewriter</figcaption>
+              </figure>
+              <figure style="margin:0; position:relative; aspect-ratio:16/9; border-radius:12px; overflow:hidden; background:#0e2738;">
+                <img src="assets/still-pied-piper.jpg" alt="Pied Piper" loading="lazy" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+                <figcaption style="position:absolute; left:0; right:0; bottom:0; padding:18px 12px 8px; font-size:12px; font-weight:700; color:#fff; background:linear-gradient(180deg,transparent,rgba(14,39,56,.8));">Pied Piper</figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Company History -->
+    <section style="background:#eef6fa; border-top:1px solid #e1edf3;">
+      <div style="max-width:980px; margin:0 auto; padding:clamp(48px,6vw,96px) clamp(20px,5vw,72px);">
+        <div style="font:700 13px/1 'Noto Sans JP'; letter-spacing:.14em; text-transform:uppercase; color:#2e9fc0; margin-bottom:14px;">会社沿革</div>
+        <h2 style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:800; font-size:clamp(28px,3.4vw,44px); line-height:1.1; letter-spacing:-.02em; margin:0 0 16px; max-width:680px;">成長の物語</h2>
+        <p style="font-size:clamp(16px,1.5vw,18px); line-height:1.7; color:#5a7488; margin:0 0 clamp(40px,5vw,64px); max-width:640px;">韓国のエンターテイメント・マーケティングスタジオから、世界中の患者様にサービスを提供する政府認可メディカルコンシェルジュへ。</p>
+
+        <div style="position:relative; padding-left:8px;">
+          <!-- rail -->
+          <div style="position:absolute; left:19px; top:10px; bottom:10px; width:2px; background:#d3e3ec;"></div>
+
+          <!-- 2021 -->
+          <div style="position:relative; padding-left:56px; padding-bottom:clamp(34px,4vw,48px);">
+            <div style="position:absolute; left:8px; top:2px; width:24px; height:24px; border-radius:999px; background:#fff; border:2px solid var(--accent); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 5px #eef6fa;"><span style="width:8px; height:8px; border-radius:999px; background:var(--accent);"></span></div>
+            <div style="display:flex; align-items:baseline; flex-wrap:wrap; gap:10px 14px; margin-bottom:14px;">
+              <span style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:800; font-size:clamp(24px,3vw,34px); line-height:1; color:#122a3a;">2021</span>
+              <span style="display:inline-flex; align-items:center; background:#fff1eb; color:var(--accent); font-weight:700; font-size:12.5px; letter-spacing:.03em; text-transform:uppercase; padding:6px 12px; border-radius:999px;">会社設立</span>
+            </div>
+            <div style="background:#fff; border:1px solid #e1edf3; border-radius:18px; padding:clamp(22px,3vw,30px); box-shadow:0 18px 40px -32px rgba(16,41,61,.4);">
+              <ul style="list-style:none; margin:0; padding:0;">
+                <li style="position:relative; padding-left:18px; margin-bottom:8px; font-size:15.5px; line-height:1.6; color:#2a4456; font-weight:600;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:var(--accent);"></span>有明青・サラムドッル株式会社を設立</li>
+                <li style="position:relative; padding-left:18px; margin-bottom:8px; font-size:15.5px; line-height:1.6; color:#2a4456; font-weight:600;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:var(--accent);"></span>韓国・日本でマーケティング事業を開始</li>
+                <li style="position:relative; padding-left:18px; font-size:15.5px; line-height:1.6; color:#2a4456; font-weight:600;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:var(--accent);"></span>大衆文化芸術企画業として登録</li>
+              </ul>
+              <div style="margin-top:20px; padding-top:18px; border-top:1px solid #eef4f7;">
+                <div style="font:700 11px/1 'Noto Sans JP'; letter-spacing:.12em; text-transform:uppercase; color:#2e9fc0; margin-bottom:12px;">主な実績</div>
+                <ul style="list-style:none; margin:0; padding:0;">
+                  <li style="position:relative; padding-left:18px; margin-bottom:7px; font-size:14.5px; line-height:1.6; color:#5a7488;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:#c0d2dd;"></span>仁川空港国内YouTubeコンテンツ制作（2年間）</li>
+                  <li style="position:relative; padding-left:18px; margin-bottom:7px; font-size:14.5px; line-height:1.6; color:#5a7488;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:#c0d2dd;"></span>仁川空港日本・中国SNS運用（2年間）</li>
+                  <li style="position:relative; padding-left:18px; margin-bottom:7px; font-size:14.5px; line-height:1.6; color:#5a7488;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:#c0d2dd;"></span>インターパークショッピングのショートフォームマーケティング</li>
+                  <li style="position:relative; padding-left:18px; margin-bottom:7px; font-size:14.5px; line-height:1.6; color:#5a7488;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:#c0d2dd;"></span>オキシジンセフティカルズ化粧品の国内マーケティング協力</li>
+                  <li style="position:relative; padding-left:18px; margin-bottom:7px; font-size:14.5px; line-height:1.6; color:#5a7488;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:#c0d2dd;"></span>VOGUE JAPAN＆GQ JAPANのコンテンツ制作</li>
+                  <li style="position:relative; padding-left:18px; margin-bottom:7px; font-size:14.5px; line-height:1.6; color:#5a7488;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:#c0d2dd;"></span>TWICE、ITZY、ATEEZ、SEVENTEEN、LOONAなどのコンテンツ制作</li>
+                  <li style="position:relative; padding-left:18px; font-size:14.5px; line-height:1.6; color:#5a7488;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:#c0d2dd;"></span>日本の芸能人・インフルエンサーの日韓ビザサポート・コラボレーション</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2024 -->
+          <div style="position:relative; padding-left:56px; padding-bottom:clamp(34px,4vw,48px);">
+            <div style="position:absolute; left:8px; top:2px; width:24px; height:24px; border-radius:999px; background:#fff; border:2px solid var(--accent); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 5px #eef6fa;"><span style="width:8px; height:8px; border-radius:999px; background:var(--accent);"></span></div>
+            <div style="display:flex; align-items:baseline; flex-wrap:wrap; gap:10px 14px; margin-bottom:14px;">
+              <span style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:800; font-size:clamp(24px,3vw,34px); line-height:1; color:#122a3a;">2024</span>
+              <span style="display:inline-flex; align-items:center; background:#fff1eb; color:var(--accent); font-weight:700; font-size:12.5px; letter-spacing:.03em; text-transform:uppercase; padding:6px 12px; border-radius:999px;">事業拡大</span>
+            </div>
+            <div style="background:#fff; border:1px solid #e1edf3; border-radius:18px; padding:clamp(22px,3vw,30px); box-shadow:0 18px 40px -32px rgba(16,41,61,.4);">
+              <ul style="list-style:none; margin:0; padding:0;">
+                <li style="position:relative; padding-left:18px; margin-bottom:8px; font-size:15.5px; line-height:1.6; color:#2a4456; font-weight:600;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:var(--accent);"></span>アリアコーポレーション株式会社に社名変更</li>
+                <li style="position:relative; padding-left:18px; margin-bottom:8px; font-size:15.5px; line-height:1.6; color:#2a4456; font-weight:600;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:var(--accent);"></span>日本人患者誘致・メディカルマーケティングへ事業拡大</li>
+                <li style="position:relative; padding-left:18px; font-size:15.5px; line-height:1.6; color:#2a4456; font-weight:600;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:var(--accent);"></span>外国人患者誘致業者として登録</li>
+              </ul>
+              <div style="margin-top:20px; padding-top:18px; border-top:1px solid #eef4f7;">
+                <div style="font:700 11px/1 'Noto Sans JP'; letter-spacing:.12em; text-transform:uppercase; color:#2e9fc0; margin-bottom:12px;">主な実績</div>
+                <ul style="list-style:none; margin:0; padding:0;">
+                  <li style="position:relative; padding-left:18px; margin-bottom:7px; font-size:14.5px; line-height:1.6; color:#5a7488;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:#c0d2dd;"></span>月間手術売上高が1.5億～2億ウォンに到達</li>
+                  <li style="position:relative; padding-left:18px; margin-bottom:7px; font-size:14.5px; line-height:1.6; color:#5a7488;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:#c0d2dd;"></span>メディカルマーケティングコンテンツの累積再生回数が1,000万回以上（インフルエンサーインプレッション含む）</li>
+                  <li style="position:relative; padding-left:18px; font-size:14.5px; line-height:1.6; color:#5a7488;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:#c0d2dd;"></span>日本からの相談累積見込み売上（手術予約確定患者様）が10億ウォンを突破</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2025 -->
+          <div style="position:relative; padding-left:56px; padding-bottom:clamp(34px,4vw,48px);">
+            <div style="position:absolute; left:8px; top:2px; width:24px; height:24px; border-radius:999px; background:#fff; border:2px solid var(--accent); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 5px #eef6fa;"><span style="width:8px; height:8px; border-radius:999px; background:var(--accent);"></span></div>
+            <div style="display:flex; align-items:baseline; flex-wrap:wrap; gap:10px 14px; margin-bottom:14px;">
+              <span style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:800; font-size:clamp(24px,3vw,34px); line-height:1; color:#122a3a;">2025</span>
+              <span style="display:inline-flex; align-items:center; background:#fff1eb; color:var(--accent); font-weight:700; font-size:12.5px; letter-spacing:.03em; text-transform:uppercase; padding:6px 12px; border-radius:999px;">新たな飛躍</span>
+            </div>
+            <div style="background:#fff; border:1px solid #e1edf3; border-radius:18px; padding:clamp(22px,3vw,30px); box-shadow:0 18px 40px -32px rgba(16,41,61,.4);">
+              <ul style="list-style:none; margin:0; padding:0;">
+                <li style="position:relative; padding-left:18px; margin-bottom:8px; font-size:15.5px; line-height:1.6; color:#2a4456; font-weight:600;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:var(--accent);"></span>手術前相談のためのCSチーム研修を強化</li>
+                <li style="position:relative; padding-left:18px; margin-bottom:8px; font-size:15.5px; line-height:1.6; color:#2a4456; font-weight:600;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:var(--accent);"></span>日韓インフルエンサープラットフォームを導入（開発中）</li>
+                <li style="position:relative; padding-left:18px; margin-bottom:8px; font-size:15.5px; line-height:1.6; color:#2a4456; font-weight:600;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:var(--accent);"></span>日本現地クリニックとの連携基盤を構築</li>
+                <li style="position:relative; padding-left:18px; font-size:15.5px; line-height:1.6; color:#2a4456; font-weight:600;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:var(--accent);"></span>日本の現地ブランドとマーケティングMOUを締結</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 2026 (latest, highlighted) -->
+          <div style="position:relative; padding-left:56px;">
+            <div style="position:absolute; left:8px; top:2px; width:24px; height:24px; border-radius:999px; background:var(--accent); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 5px #eef6fa;"><span style="width:8px; height:8px; border-radius:999px; background:#fff;"></span></div>
+            <div style="display:flex; align-items:baseline; flex-wrap:wrap; gap:10px 14px; margin-bottom:14px;">
+              <span style="font-family:'Zen Kaku Gothic New',sans-serif; font-weight:800; font-size:clamp(24px,3vw,34px); line-height:1; color:#122a3a;">2026</span>
+              <span style="display:inline-flex; align-items:center; background:var(--accent); color:#fff; font-weight:700; font-size:12.5px; letter-spacing:.03em; text-transform:uppercase; padding:6px 12px; border-radius:999px;">グローバル拡大</span>
+            </div>
+            <div style="background:#0e2738; border-radius:18px; padding:clamp(24px,3vw,32px); box-shadow:0 30px 60px -34px rgba(16,41,61,.7);">
+              <ul style="list-style:none; margin:0; padding:0;">
+                <li style="position:relative; padding-left:18px; margin-bottom:9px; font-size:15.5px; line-height:1.6; color:#eef6fa; font-weight:600;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:var(--accent);"></span>英語圏向けマーケティングチームを発足</li>
+                <li style="position:relative; padding-left:18px; margin-bottom:9px; font-size:15.5px; line-height:1.6; color:#eef6fa; font-weight:600;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:var(--accent);"></span>中華圏向けマーケティングチームを発足</li>
+                <li style="position:relative; padding-left:18px; margin-bottom:9px; font-size:15.5px; line-height:1.6; color:#eef6fa; font-weight:600;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:var(--accent);"></span>海外インフルエンサープラットフォームをローンチ</li>
+                <li style="position:relative; padding-left:18px; font-size:15.5px; line-height:1.6; color:#eef6fa; font-weight:600;"><span style="position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:999px; background:var(--accent);"></span>現地提携クリニックとMOUを締結</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background:#0e2738; color:#fff; padding:40px clamp(20px,5vw,72px);">
+    <div style="max-width:1320px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:18px;">
+      <a href="Aria%20Korea%20Homepage.dc.html" style="display:flex; align-items:center; gap:8px; font-size:13.5px; color:rgba(255,255,255,.7); font-weight:600;">
+        <i data-lucide="arrow-left" style="font-size:16px;"></i> ホームに戻る
+      </a>
+      <div style="font-size:13px; color:rgba(255,255,255,.5);">© 2026 Ariacorporation · ariakorea.com</div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 1320, &quot;height&quot;: 900 }
+}">
+class Component extends DCLogic {
+  state = { cats: [], surgOpen: false, langOpen: false };
+  componentDidMount(){
+    import('./surgery-data.js')
+      .then((m) => this.setState({ cats: m.SURGERY_CATEGORIES }))
+      .catch(() => {});
+    this._onDocClick = (e) => { if (this.state.langOpen && !(e.target.closest && e.target.closest('.nav-lang'))) this.setState({ langOpen: false }); };
+    document.addEventListener('click', this._onDocClick);
+    this._icons();
+  }
+  componentWillUnmount(){ document.removeEventListener('click', this._onDocClick); }
+  componentDidUpdate(){ this._icons(); }
+  _icons(){ try { if (window.lucide) window.lucide.createIcons(); } catch (e) {} }
+  _openSurg(){ clearTimeout(this._surgTimer); this.setState({ surgOpen: true }); }
+  _closeSurg(){ clearTimeout(this._surgTimer); this._surgTimer = setTimeout(() => this.setState({ surgOpen: false }), 1000); }
+  renderVals(){
+    return {
+      cats: this.state.cats,
+      surgClass: this.state.surgOpen ? 'open' : '',
+      onSurgEnter: () => this._openSurg(),
+      onSurgLeave: () => this._closeSurg(),
+      langClass: this.state.langOpen ? 'open' : '',
+      onLangToggle: (e) => { e.preventDefault(); e.stopPropagation(); this.setState((s) => ({ langOpen: !s.langOpen })); },
+    };
+  }
+}
+</script>
+</body>
+</html>

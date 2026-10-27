@@ -1,0 +1,39 @@
+<!-- Decap CMS admin entry point -->
+<!-- Place at: public/admin/index.html in the deployed site -->
+<!-- Visiting https://your-site.netlify.app/admin/ loads the CMS UI from this file. -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Aria Korea — Content Manager</title>
+    <!-- Netlify Identity widget: handles admin login -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  </head>
+  <body>
+    <!-- Decap CMS core: reads ./config.yml automatically -->
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on('init', (user) => {
+          if (!user) {
+            window.netlifyIdentity.on('login', () => {
+              document.location.href = '/admin/';
+            });
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
+
+<!--
+  ONE-TIME NETLIFY DASHBOARD STEPS:
+    1. Site settings → Identity → Enable Identity
+    2. Identity → Registration → set to "Invite only"
+    3. Identity → Services → Enable Git Gateway
+    4. Identity → Invite users → add each admin's email
+  Admins then open https://your-site.netlify.app/admin/, accept the email invite,
+  set a password, and log in. No GitHub account needed.
+-->

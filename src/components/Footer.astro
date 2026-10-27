@@ -1,0 +1,74 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  /** "full" = homepage footer with link columns; "back" = slim footer with a back link; "blog" = logo + copyright */
+  variant?: 'full' | 'back' | 'blog';
+  backHref?: string;
+  backLabel?: string;
+}
+
+const { variant = 'full', backHref = '/', backLabel = 'ホームに戻る' } = Astro.props;
+
+const footerCols = [
+  { title: '施術一覧', links: [{ label: '目の整形', href: '#' }, { label: '鼻の整形', href: '#' }, { label: 'アンチエイジング', href: '#' }, { label: '輪郭整形', href: '#' }, { label: 'ボディライン整形', href: '#' }] },
+  { title: '会社情報', links: [{ label: '私たちの物語', href: '#' }, { label: 'コンシェルジュサービス', href: '#' }, { label: '患者様レビュー', href: '#' }, { label: 'ブログ', href: '#' }] },
+  { title: '資料', links: [{ label: '手術ガイド', href: '#' }, { label: '回復のヒント', href: '#' }, { label: '韓国旅行', href: '#' }, { label: 'LINEで予約', href: 'https://lin.ee/3KJTZXJ' }] },
+];
+---
+
+{variant === 'full' && (
+  <footer style="background:#0e2738; color:#fff; padding:clamp(56px,7vw,88px) clamp(24px,5vw,72px) 40px;">
+    <div style="max-width:1320px; margin:0 auto;">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:40px; padding-bottom:48px; border-bottom:1px solid rgba(255,255,255,.12);">
+        <div style="grid-column:1/2; min-width:220px; max-width:300px;">
+          <img src="/assets/aria-logo-white-trim.png" alt="Ariacorporation" style="height:30px; width:auto; display:block; margin-bottom:18px;" />
+          <p style="font-size:14.5px; line-height:1.6; color:rgba(255,255,255,.66); margin:0 0 20px;">韓国渡航患者様のための美容整形＆メディカルコンシェルジュ。</p>
+          <div style="display:flex; gap:12px;">
+            <a href="https://www.instagram.com/ariacorp_japan" target="_blank" rel="noopener" style="width:40px; height:40px; border-radius:12px; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><rect width="20" height="20" x="2" y="2" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+            <a href="#" style="width:40px; height:40px; border-radius:12px; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+            <a href="#" style="width:40px; height:40px; border-radius:12px; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg></a>
+            <a href="https://lin.ee/3KJTZXJ" style="width:40px; height:40px; border-radius:12px; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center; font-size:18px;"><Icon name="message-circle" /></a>
+          </div>
+        </div>
+        {footerCols.map((fc) => (
+          <div>
+            <div style="font-weight:700; font-size:14px; letter-spacing:.04em; text-transform:uppercase; color:rgba(255,255,255,.92); margin-bottom:18px;">{fc.title}</div>
+            <div style="display:flex; flex-direction:column; gap:11px;">
+              {fc.links.map((l) => (
+                <a href={l.href} style="font-size:14.5px; color:rgba(255,255,255,.66);">{l.label}</a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; padding-top:26px; font-size:13px; color:rgba(255,255,255,.5);">
+        <div>© 2026 Ariacorporation. All rights reserved. · Business Reg. 000-00-00000 · ariakorea.com</div>
+        <div style="display:flex; gap:22px;">
+          <a href="#" style="color:rgba(255,255,255,.5);">プライバシーポリシー</a>
+          <a href="#" style="color:rgba(255,255,255,.5);">利用規約</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+)}
+
+{variant === 'back' && (
+  <footer style="background:#0e2738; color:#fff; padding:40px clamp(20px,5vw,72px);">
+    <div style="max-width:1320px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:18px;">
+      <a href={backHref} style="display:flex; align-items:center; gap:8px; font-size:13.5px; color:rgba(255,255,255,.7); font-weight:600;">
+        <Icon name="arrow-left" style="font-size:16px;" /> {backLabel}
+      </a>
+      <div style="font-size:13px; color:rgba(255,255,255,.5);">© 2026 Ariacorporation · ariakorea.com</div>
+    </div>
+  </footer>
+)}
+
+{variant === 'blog' && (
+  <footer style="background:#0e2738; color:#fff; padding:48px clamp(20px,5vw,72px);">
+    <div style="max-width:1180px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:18px;">
+      <img src="/assets/aria-logo-white-trim.png" alt="Ariacorporation" style="height:26px; width:auto;" />
+      <div style="font-size:13.5px; color:rgba(255,255,255,.6);">© 2026 Ariacorporation. All rights reserved.</div>
+    </div>
+  </footer>
+)}

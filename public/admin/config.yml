@@ -1,0 +1,51 @@
+# Decap CMS configuration — Aria Japan blog (ja)
+# Place at: public/admin/config.yml in the deployed site
+# Docs: https://decapcms.org/docs/configuration-options/
+
+backend:
+  name: git-gateway        # Netlify Identity + Git Gateway — admins log in with email, not GitHub
+  branch: main              # branch Decap commits to
+
+# Where uploaded images (cover + inline body images) are stored, and how they're referenced
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+# Editors can save a draft before it goes live
+publish_mode: editorial_workflow
+
+collections:
+  - name: "blog"
+    label: "ブログ記事"
+    label_singular: "Post"
+    folder: "src/content/blog"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    summary: "{{title}} · {{category}} · {{date}}"
+    sortable_fields: ["date", "title", "category"]
+    fields:
+      - { label: "タイトル", name: "title", widget: "string" }
+      - label: "カテゴリー"
+        name: "category"
+        widget: "select"
+        options:
+          - "手術ガイド"
+          - "回復のヒント"
+          - "韓国旅行"
+          - "患者様の声"
+        default: "手術ガイド"
+      - { label: "公開日", name: "date", widget: "datetime" }
+      - label: "カバー画像"
+        name: "cover"
+        widget: "image"
+        required: false
+        hint: "Shown as the card thumbnail on the Guides & recovery stories board."
+      - label: "本文"
+        name: "body"
+        widget: "markdown"
+        hint: "Use the image button in the toolbar to drop photos anywhere inside the article — no separate field needed."
+      - label: "下書き"
+        name: "draft"
+        widget: "boolean"
+        default: false
+        hint: "On = saved but not shown on the live site yet."
